@@ -94,6 +94,16 @@
     box-shadow: 0 14px 28px rgba(0,0,0,0.06);
   }
   
+  .page-content > section {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 28px;
+    margin: 28px auto 48px auto;
+    border: 1px solid #e7e7e7;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.06);
+    max-width: 900px;
+  }
+  
   /* =========================
      Hero layout
      ========================= */
