@@ -42,11 +42,16 @@
     text-decoration: none;
   }
   
-  .site-nav a,
-  .site-footer-nav a {
-    margin: 0 12px;
-    opacity: 0.85;
+  .footer-nav {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
   }
+  
+  .footer-nav a {
+    margin: 0;
+  }  
   
   .site-nav a:hover,
   .site-footer-nav a:hover {
