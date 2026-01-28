@@ -19,7 +19,7 @@
   }
   
   /* =========================
-     Header / Footer
+     Header / Footer (LOCKED)
      ========================= */
   .site-header,
   .site-footer {
@@ -28,11 +28,13 @@
   }
   
   .site-header {
-    padding: 18px;
+    height: 72px;
+    display: flex;
+    align-items: center;
   }
   
   .site-footer {
-    padding: 22px 18px;
+    padding: 32px 16px;
     font-size: 14px;
   }
   
@@ -42,31 +44,17 @@
     text-decoration: none;
   }
   
-  .footer-nav {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    flex-wrap: wrap;
-  }
-  
-  .footer-nav a {
-    margin: 0;
-  }  
-  
-  .site-nav a:hover,
-  .site-footer-nav a:hover {
-    opacity: 1;
-  }
-  
   /* =========================
-     Header layout
+     Header Layout (SOURCE OF TRUTH)
      ========================= */
   .site-header-inner {
     max-width: 1100px;
     margin: 0 auto;
+    padding: 0 16px;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: space-between;
+    width: 100%;
   }
   
   .site-brand a {
@@ -75,22 +63,37 @@
   }
   
   .site-nav {
-    margin-top: 10px;
+    display: flex;
+  }
+  
+  .site-nav a {
+    font-weight: 600;
+    margin-left: 24px;
+    text-decoration: none;
+  }
+  
+  .site-nav a.active {
+    opacity: 0.8;
   }
   
   /* =========================
-     Main container
+     Main Containers
      ========================= */
   .site-main {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 28px 18px;
+    padding: 28px 16px;
+  }
+  
+  .page-content {
+    padding: 28px 16px 48px 16px;
   }
   
   /* =========================
-     Section cards
+     Section Cards (UNIFIED)
      ========================= */
-  .site-main > section {
+  .site-main > section,
+  .page-content > section {
     background: #ffffff;
     border-radius: 18px;
     padding: 28px;
@@ -100,17 +103,12 @@
   }
   
   .page-content > section {
-    background: #ffffff;
-    border-radius: 18px;
-    padding: 28px;
-    margin: 28px auto 48px auto;
-    border: 1px solid #e7e7e7;
-    box-shadow: 0 14px 28px rgba(0,0,0,0.06);
     max-width: 900px;
+    margin: 28px auto 48px auto;
   }
   
   /* =========================
-     Hero layout
+     Hero Layout
      ========================= */
   .hero {
     display: grid;
@@ -142,7 +140,7 @@
   }
   
   /* =========================
-     Buttons
+     Buttons (FINAL, GLOBAL)
      ========================= */
   .cta-button {
     display: inline-block;
@@ -182,7 +180,7 @@
   }
   
   /* =========================
-     Footer layout
+     Footer Layout (UNIFIED)
      ========================= */
   .site-footer-inner {
     max-width: 1100px;
@@ -190,31 +188,29 @@
     text-align: center;
   }
   
-  .site-footer-nav {
-    margin-top: 10px;
+  .footer-nav {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  
+  .footer-nav a {
+    text-decoration: none;
   }
   
   /* =========================
      Responsive
      ========================= */
   @media (min-width: 860px) {
-    .site-header-inner {
-      flex-direction: row;
-      justify-content: space-between;
-    }
-  
-    .site-nav {
-      margin-top: 0;
-    }
-  
     .hero {
       grid-template-columns: 1.2fr 0.8fr;
       align-items: center;
     }
   }
-
+  
   @media (max-width: 768px) {
-
+  
     .hero-visual {
       min-height: 200px;
       margin-top: 1.5rem;
@@ -232,6 +228,4 @@
     }
   
   }
-  
-  
   
