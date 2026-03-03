@@ -42,55 +42,66 @@
       <h1>About MJB Strategic</h1>
 
       <p>
-        MJB Strategic reflects over two decades of hands-on financial and operational leadership across retail, eCommerce, hospitality, and multi-entity commercial environments.
+        MJB Strategic exists to give owner-led businesses structural financial clarity.
+        The work is designed for operators who are carrying real economic weight and want to see what is true inside the numbers before making decisions.
       </p>
 
       <p>
-        I have carried responsibility for annual revenues approaching nine figures in local currency and managed balance sheets in the tens of millions. These were inventory-heavy, margin-sensitive businesses where cash flow, procurement discipline, pricing control, and operational execution directly determined stability and growth.
+        Some clients engage because pressure is building.
+        Others engage because the business is stable and they want to move with precision.
+        The diagnostic process is the same: isolate what is driving outcomes, where risk is accumulating, and where opportunity is being missed because it is not visible in the current view.
       </p>
-    
+
       <h2>What the work actually is</h2>
 
       <p>
-        Each engagement is a defined financial diagnostic focused on isolating how profit, capital, cost structure, inventory, supplier exposure, and demand interact inside a business.
+        Each engagement is a defined financial diagnostic.
+        You engage for one domain or multiple, depending on what is happening in the business.
       </p>
 
       <p>
-        Some engagements identify structural strain before it escalates. Others identify leverage and opportunity before capital is committed. The objective is the same in both cases to surface economic reality clearly enough that decision-making improves immediately.
-      </p>
-    
-      <h2>The underlying capability</h2>
-
-      <p>
-        My background includes multi-entity management accounts, budgeting and forecasting, scenario modelling, pricing analysis, direct international sourcing, inventory control, SOP design, automation, and financial reporting aligned to executive decision cycles.
+        The output is analytical clarity, delivered as a written report, a walkthrough session, or both.
+        The work explains what is happening, why it is happening, and where economic weight sits.
+        Execution remains with the business owner and their existing advisors.
       </p>
 
-      <p>
-        I have built reporting frameworks where none existed, implemented procurement strategies that improved margin, launched and scaled digital revenue channels, and restored clarity in businesses navigating transition or ownership change.
-      </p>
+      <h2>How this approach was built</h2>
 
       <p>
-        The consistent thread has been structural financial thinking. Seeing how the pieces connect and translating that complexity into something precise and usable for business owners.
-      </p>
-    
-      <h2>How this approach was formed</h2>
-
-      <p>
-        Across different industries and ownership structures, the pattern has remained consistent. When financial information is technically correct but structurally unclear, decision-making becomes reactive.
+        This methodology was formed inside operating businesses where financial and operational reality had to be reconciled under real constraints.
+        The focus has consistently been on decision usefulness, not reporting cosmetics.
       </p>
 
       <p>
-        When profit drivers are isolated, capital strain is quantified, and breakpoints are tested, decision quality improves even before operational changes are made. That principle forms the foundation of MJB Strategic.
+        The pattern is consistent: when the structure is visible, decision quality improves immediately.
+        That holds whether the business is trying to stabilise, expand, restructure, or deploy capital more intelligently.
+      </p>
+
+      <h2>About the operator</h2>
+
+      <p>
+        MJB Strategic is run by Thys.
+        He has operated inside hospitality and retail businesses, and briefly within financial services.
+        His largest commercial responsibility was just under R100 million in annual revenue, with balance sheet exposure around R50 million.
+      </p>
+
+      <p>
+        The work is built around practical analysis that owners can use.
+        No posturing, no generic playbooks, no theatre.
+        Just a clean explanation of what is driving results and what that implies for risk and opportunity.
       </p>
 
       <h2>Who this is for</h2>
 
       <p>
-        This work is designed for owner-led businesses operating at meaningful scale who either feel structural pressure building or are actively seeking to move on clear, quantified opportunity.
+        Owner-led businesses operating at meaningful scale, where complexity has outgrown intuitive oversight.
+        Businesses that want analytical precision before committing capital, changing structure, or chasing growth.
       </p>
 
       <p>
-        Operators managing real revenue, real supplier exposure, real inventory, and real financial responsibility. Some arrive under pressure. Others arrive preparing for expansion. Both require clarity before committing capital or restructuring direction.
+        Some arrive under pressure.
+        Some arrive preparing for opportunity.
+        The common requirement is the same: clarity before action.
       </p>
     </section>
 
@@ -130,6 +141,27 @@
   
     </div>
   </footer>
+
+  <button class="back-to-top" type="button" aria-label="Back to top">↑</button>
+
+  <script>
+    (function () {
+      var btn = document.querySelector(".back-to-top");
+      if (!btn) return;
+
+      function toggle() {
+        if (window.scrollY > 500) btn.classList.add("show");
+        else btn.classList.remove("show");
+      }
+
+      btn.addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      window.addEventListener("scroll", toggle, { passive: true });
+      toggle();
+    })();
+  </script>
 
 </body>
 </html>
