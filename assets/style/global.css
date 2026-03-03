@@ -146,7 +146,7 @@
     min-height: 420px;
     border-radius: 6px;
     background-size: cover;
-    background-position: center;
+    background-position: center center;
     background-repeat: no-repeat;
     box-shadow: 0 40px 80px rgba(15, 23, 42, 0.08);
   }
@@ -425,7 +425,7 @@
   margin-top: 32px;
   border-radius: 12px;
   background-size: cover;
-  background-position: center top;   /* prevents awkward crop */
+  background-position: center center;   /* prevents awkward crop */
   background-repeat: no-repeat;
   border: 1px solid rgba(15, 23, 42, 0.08);
   box-shadow: 0 24px 48px rgba(15, 23, 42, 0.08);
