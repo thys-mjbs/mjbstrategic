@@ -1,6 +1,7 @@
 /* =========================
    Base Reset
    ========================= */
+
    * {
     box-sizing: border-box;
   }
@@ -13,7 +14,7 @@
   body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
                  Roboto, "Helvetica Neue", Arial, sans-serif;
-    background: #f4f6f8;
+    background: #f3f5f7;
     color: #0f172a;
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
@@ -22,6 +23,7 @@
   /* =========================
      Header / Footer (LOCKED)
      ========================= */
+  
   .site-header,
   .site-footer {
     background: #0b1220;
@@ -35,7 +37,7 @@
   }
   
   .site-footer {
-    padding: 48px 16px;
+    padding: 60px 24px;
     font-size: 14px;
   }
   
@@ -48,6 +50,7 @@
   /* =========================
      Header Layout
      ========================= */
+  
   .site-header-inner {
     max-width: 1200px;
     margin: 0 auto;
@@ -83,85 +86,88 @@
   /* =========================
      Main Containers
      ========================= */
+  
   .site-main {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 60px 24px;
+    padding: 0 24px 80px 24px;
   }
   
   .page-content {
-    padding: 60px 24px 80px 24px;
+    padding: 80px 24px;
   }
   
   /* =========================
-     Section Cards (Refined)
+     Section Structure
      ========================= */
   
-  /* =========================
-   Section Structure (Refined Flat)
-   ========================= */
-
   .site-main > section {
-    padding: 80px 0;
-    margin: 0;
-    border: none;
-    box-shadow: none;
-    background: transparent;
+    padding: 100px 0;
   }
-
+  
   .page-content > section {
     max-width: 860px;
-    margin: 0 auto 80px auto;
-    padding: 0;
-    border: none;
-    box-shadow: none;
-    background: transparent;
+    margin: 0 auto 100px auto;
   }
-
-  /* Subtle section divider */
-  .site-main > section:not(:last-child) {
-    border-bottom: 1px solid #e5e7eb;
+  
+  /* Alternating tonal rhythm */
+  .site-main > section:nth-child(even) {
+    background: #f8fafc;
+    padding: 100px 40px;
   }
-
+  
+  .site-main > section:nth-child(odd):not(.hero) {
+    background: #ffffff;
+    padding: 100px 40px;
+  }
+  
   /* =========================
-     Hero Layout
+     Hero
      ========================= */
+  
   .hero {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 48px;
-    background: #ffffff;
+    gap: 80px;
+    padding: 140px 0 100px 0;
+    background: linear-gradient(to bottom, #ffffff 0%, #f6f8fb 100%);
   }
   
   .hero-content h1 {
-    font-size: 44px;
+    font-size: 52px;
     font-weight: 600;
-    line-height: 1.2;
-    margin-bottom: 24px;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    margin-bottom: 32px;
+    max-width: 780px;
   }
   
   .hero-content p {
     font-size: 18px;
-    color: #334155;
-    margin-bottom: 20px;
+    color: #475569;
+    margin-bottom: 24px;
+    max-width: 640px;
   }
   
   .hero-actions {
-    margin-top: 28px;
+    margin-top: 32px;
   }
   
   .hero-visual {
-    border-radius: 12px;
+    border-radius: 10px;
     background-image: url("/assets/style/hero-structure.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    min-height: 320px;
+    min-height: 380px;
+    filter: grayscale(15%) contrast(105%);
+    box-shadow: 0 30px 60px rgba(15, 23, 42, 0.08);
   }
   
   /* =========================
      Buttons
      ========================= */
+  
   .cta-button {
     display: inline-block;
     padding: 14px 30px;
@@ -193,25 +199,27 @@
   /* =========================
      Headings
      ========================= */
+  
   h1, h2, h3 {
     margin-top: 0;
   }
   
   h2 {
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 600;
-    margin-bottom: 18px;
+    margin-bottom: 22px;
   }
   
   h3 {
     font-size: 20px;
     font-weight: 600;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
   
   /* =========================
      Footer Layout
      ========================= */
+  
   .site-footer-inner {
     max-width: 1200px;
     margin: 0 auto;
@@ -248,6 +256,7 @@
   /* =========================
      Responsive
      ========================= */
+  
   @media (min-width: 900px) {
     .hero {
       grid-template-columns: 1.2fr 0.8fr;
@@ -258,18 +267,19 @@
   @media (max-width: 768px) {
   
     .hero {
-      gap: 32px;
+      gap: 40px;
+      padding: 100px 0 80px 0;
     }
   
     .hero-visual {
-      min-height: 240px;
+      min-height: 260px;
     }
   
     .hero-actions {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 12px;
+      gap: 14px;
     }
   
     .cta-button.secondary {
@@ -287,99 +297,67 @@
     }
   
   }
-
+  
   /* =========================
-   Mobile Hamburger Nav (RESTORED)
-   ========================= */
-
-.nav-toggle {
-  display: none;
-}
-
-.nav-toggle-label {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-  cursor: pointer;
-}
-
-.nav-toggle-label span {
-  width: 24px;
-  height: 2px;
-  background: #ffffff;
-  display: block;
-}
-
-@media (max-width: 768px) {
-
-  .site-header-inner {
-    justify-content: center;
-    position: relative;
-  }
-
-  .site-brand {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .nav-toggle-label {
-    display: flex;
-    position: absolute;
-    right: 24px;
-  }
-
-  .site-nav {
+     Mobile Hamburger Nav
+     ========================= */
+  
+  .nav-toggle {
     display: none;
-    position: absolute;
-    top: 72px;
-    left: 0;
-    width: 100%;
-    background: #0b1220;
+  }
+  
+  .nav-toggle-label {
+    display: none;
     flex-direction: column;
-    padding: 16px 0;
-  }
-
-  .site-nav a {
-    margin: 12px 0;
-    text-align: center;
-  }
-
-  .nav-toggle:checked + .nav-toggle-label + .site-nav {
-    display: flex;
-  }
-
-}
-
-/* =========================
-   Tonal Section Layering
-   ========================= */
-
-   body {
-    background: #f3f5f7;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
   }
   
-  /* Hero slightly elevated */
-  .hero {
+  .nav-toggle-label span {
+    width: 24px;
+    height: 2px;
     background: #ffffff;
-    padding: 80px 60px;
-    border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+    display: block;
   }
   
-  /* Alternating section tone */
-  .site-main > section:nth-child(even) {
-    background: #f8fafc;
-    padding: 80px 40px;
-  }
+  @media (max-width: 768px) {
   
-  .site-main > section:nth-child(odd):not(.hero) {
-    background: #ffffff;
-    padding: 80px 40px;
-  }
+    .site-header-inner {
+      justify-content: center;
+      position: relative;
+    }
   
-  /* Remove bottom divider now that tone handles separation */
-  .site-main > section:not(:last-child) {
-    border-bottom: none;
+    .site-brand {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  
+    .nav-toggle-label {
+      display: flex;
+      position: absolute;
+      right: 24px;
+    }
+  
+    .site-nav {
+      display: none;
+      position: absolute;
+      top: 72px;
+      left: 0;
+      width: 100%;
+      background: #0b1220;
+      flex-direction: column;
+      padding: 16px 0;
+    }
+  
+    .site-nav a {
+      margin: 12px 0;
+      text-align: center;
+    }
+  
+    .nav-toggle:checked + .nav-toggle-label + .site-nav {
+      display: flex;
+    }
+  
   }
