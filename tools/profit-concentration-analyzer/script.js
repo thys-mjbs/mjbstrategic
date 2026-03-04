@@ -55,13 +55,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let totalProfit = 0;
 
-    segments.forEach(function (s) {
+    segments.forEach(s => {
       totalProfit += s.profit;
     });
 
-    segments.sort(function (a, b) {
-      return b.profit - a.profit;
-    });
+    segments.sort((a,b) => b.profit - a.profit);
 
     const topProfit = segments[0].profit;
 
