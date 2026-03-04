@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>MJB Strategic</title>
+  <meta name="description" content="Fixed-scope diagnostic reviews that surface the structural sources of operational and financial pressure inside owner-managed businesses." />
+
+  <link rel="icon" href="/assets/style/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="/assets/style/global.css" />
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="site-brand">
+        <a href="/">MJB Strategic</a>
+      </div>
+  
+      <input type="checkbox" id="nav-toggle" class="nav-toggle">
+  
+      <label for="nav-toggle" class="nav-toggle-label">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+  
+      <nav class="site-nav">
+        <a href="/home/">Home</a>
+        <a href="/diagnostics/">Diagnostics</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>  
+
+  <main class="site-main tool-page">
+    <div style="max-width:720px;margin:0 auto">
+      <h1>Pricing Power Sensitivity Calculator</h1>
+      <p>
+        This diagnostic estimates how total profit shifts when prices rise by small increments under your assumed demand response. It treats gross margin as a stable percentage and tests whether profit improves without adding volume.
+      </p>
+      <p>
+        In real businesses, price moves show up as list price changes, discount tightening, surcharge policies, or minimum order enforcement. The operational reality is that demand rarely stays flat, so the net outcome depends on how orders, churn, and deal sizes react.
+      </p>
+      <p>
+        This matters because small price decisions compound across every invoice and can outperform growth efforts if demand holds. It also exposes when the business is already at the edge of customer tolerance and needs a tighter pricing and retention plan.
+      </p>
+    </div>
+  
+    <section class="tool-section">
+      <div class="tool-input-grid">
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="annualRevenue">Annual revenue</label>
+            <input id="annualRevenue" type="number" inputmode="decimal" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Use last 12 months billed revenue, before tax.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="grossMarginPct">Average gross margin (%)</label>
+            <input id="grossMarginPct" type="number" inputmode="decimal" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Use gross margin after direct costs and COGS.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="demandChangePer1Pct">Demand change per 1% price increase (%)</label>
+            <input id="demandChangePer1Pct" type="number" inputmode="decimal" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Negative means fewer orders; positive means demand increases.
+          </p>
+        </div>
+      </div>
+    </section>
+  
+    <p>
+      This tool assumes your internal reporting can separate price, volume, and margin by product, customer, and channel. If you cannot track discounts, churn, and order frequency alongside gross margin, pricing decisions will look cleaner on paper than they behave in cash generation.
+    </p>
+  
+    <div class="tool-buttons">
+      <button id="calculateButton" class="tool-button">Run diagnostic</button>
+      <button id="shareWhatsAppButton" class="tool-button">Share this tool on WhatsApp</button>
+    </div>
+  
+    <div id="result"></div>
+  
+    <div class="tool-buttons" style="text-align:center;margin-top:28px">
+      <button id="contactButton" class="tool-button" onclick="window.location.href='/contact'">
+        Contact us to explore fit and start your engagement today
+      </button>
+    </div>
+  
+    <script src="script.js"></script>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner footer-grid">
+  
+      <div class="footer-left">
+        <a href="mailto:thys@mjbstrategic.com" class="footer-email">
+          thys@mjbstrategic.com
+        </a>
+        <a href="https://www.linkedin.com/in/matthys-b-062619172/"
+           target="_blank"
+           rel="noopener"
+           class="footer-linkedin">
+          LinkedIn
+        </a>
+      </div>
+  
+      <div class="footer-center">
+        <p>© 2026 MJB Strategic</p>
+        <nav class="footer-nav">
+          <a href="/privacy/">Privacy</a>
+          <a href="/terms/">Terms</a>
+          <a href="/disclaimer/">Disclaimer</a>
+        </nav>
+      </div>
+  
+      <div class="footer-right">
+        <address>
+          Corlett Drive, Illovo<br>
+          Sandton, Gauteng<br>
+          South Africa, 2196
+        </address>
+      </div>
+  
+    </div>
+  </footer>
+
+  <button class="back-to-top" type="button" aria-label="Back to top">↑</button>
+
+  <script>
+    (function () {
+      var btn = document.querySelector(".back-to-top");
+      if (!btn) return;
+
+      function toggle() {
+        if (window.scrollY > 300) btn.classList.add("show");
+        else btn.classList.remove("show");
+      }
+
+      btn.addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      window.addEventListener("scroll", toggle, { passive: true });
+      toggle();
+    })();
+  </script>
+
+</body>
+</html>
