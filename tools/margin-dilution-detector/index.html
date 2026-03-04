@@ -38,7 +38,75 @@
     </div>
   </header>  
 
+  <main class="site-main tool-page">
+    <div style="max-width:720px;margin:0 auto">
+      <h1>Margin Dilution Detector</h1>
+      <p>This diagnostic measures whether recent volume growth increased total gross profit or eroded it through weaker unit margin. It compares profit contribution before and after discounting.</p>
+      <p>In real businesses this shows up when sales teams win orders by reducing price while costs stay fixed. You see more invoices and higher units shipped, but cash generation per unit falls.</p>
+      <p>This matters because management can misread volume as momentum while the profit engine is weakening. The output helps isolate whether growth is strengthening contribution or consuming capacity for less profit.</p>
+    </div>
   
+    <section class="tool-section">
+      <div class="tool-input-grid">
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="price">Average selling price per unit</label>
+            <input id="price" type="number" inputmode="decimal" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Use the typical invoice price before discounts.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="cost">Direct cost per unit</label>
+            <input id="cost" type="number" inputmode="decimal" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Include variable inputs directly tied to each unit sold.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="discountPercent">Typical discount applied</label>
+            <input id="discountPercent" type="number" inputmode="decimal" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Enter the average discount used to win orders.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="volumeGrowthPercent">Recent sales volume growth</label>
+            <input id="volumeGrowthPercent" type="number" inputmode="decimal" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Use the percentage change in units sold.
+          </p>
+        </div>
+      </div>
+    </section>
+  
+    <p class="tool-note">
+      For this diagnostic to be useful, you need basic internal visibility into pricing, unit costs, discounting, and unit volumes. If your reporting mixes product lines, bundles, or one-off deals without separating unit economics, the signal will be blurred and the operational interpretation may be wrong.
+    </p>
+  
+    <div class="tool-buttons">
+      <button id="calculateButton" type="button">Run diagnostic</button>
+      <button id="shareWhatsAppButton" type="button">Share this tool on WhatsApp</button>
+    </div>
+  
+    <div id="result"></div>
+  
+    <div class="tool-cta">
+      <a class="tool-cta-button" href="/contact">Contact</a>
+    </div>
+  
+    <script src="script.js"></script>
+  </main>
     
   <footer class="site-footer">
     <div class="site-footer-inner footer-grid">
