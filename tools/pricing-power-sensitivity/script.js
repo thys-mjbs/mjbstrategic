@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-
   const calculateButton = document.getElementById("calculateButton");
   const shareButton = document.getElementById("shareWhatsAppButton");
   const resultContainer = document.getElementById("result");
@@ -10,16 +9,45 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function formatNumber(value) {
-    return Math.round(value).toLocaleString();
+    const rounded = Math.round(value);
+    return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
   function runDiagnostic() {
+    resultContainer.innerHTML = "";
 
+    /* INPUT COLLECTION */
     const annualRevenue = Number(document.getElementById("annualRevenue").value);
     const grossMarginPct = Number(document.getElementById("grossMarginPct").value);
     const demandChangePer1Pct = Number(document.getElementById("demandChangePer1Pct").value);
 
-    if (!Number.isFinite(annualRevenue) || !Number.isFinite(grossMarginPct) || !Number.isFinite(demandChangePer1Pct)) {
+    const priceIncrease2 = Number(document.getElementById("priceIncrease2").value);
+    const priceIncrease3 = Number(document.getElementById("priceIncrease3").value);
+    const priceIncrease5 = Number(document.getElementById("priceIncrease5").value);
+
+    const priceRealisationPctInput = document.getElementById("priceRealisationPct").value;
+    const variableCostPctInput = document.getElementById("variableCostPctOfRevenue").value;
+    const orderCountInput = document.getElementById("orderCount").value;
+
+    const priceRealisationPct = priceRealisationPctInput === "" ? null : Number(priceRealisationPctInput);
+    const variableCostPctOfRevenue = variableCostPctInput === "" ? null : Number(variableCostPctInput);
+    const orderCount = orderCountInput === "" ? null : Number(orderCountInput);
+
+    /* VALIDATION */
+    const requiredValues = [
+      annualRevenue,
+      grossMarginPct,
+      demandChangePer1Pct,
+      priceIncrease2,
+      priceIncrease3,
+      priceIncrease5
+    ];
+
+    const requiredAreValid = requiredValues.every(function (v) {
+      return Number.isFinite(v);
+    });
+
+    if (!requiredAreValid) {
       showError("Enter valid numeric values in all required fields.");
       return;
     }
@@ -29,235 +57,241 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    if (grossMarginPct <= 0 || grossMarginPct > 100) {
-      showError("Gross margin must be between 1 and 100.");
+    if (grossMarginPct < 0 || grossMarginPct > 100) {
+      showError("Gross margin must be between 0 and 100.");
       return;
     }
 
-    if (demandChangePer1Pct < -100 || demandChangePer1Pct > 100) {
-      showError("Demand change must be between -100 and 100.");
+    if (priceIncrease2 < 0 || priceIncrease3 < 0 || priceIncrease5 < 0) {
+      showError("Price increase values cannot be negative.");
       return;
     }
 
-    const marginDecimal = grossMarginPct / 100;
-    const baseProfit = annualRevenue * marginDecimal;
-
-    const demandPer1Decimal = demandChangePer1Pct / 100;
-
-    const scenarioPercents = [2, 3, 5];
-    const scenarios = [];
-
-    for (let i = 0; i < scenarioPercents.length; i += 1) {
-
-      const priceIncreasePct = scenarioPercents[i];
-      const priceIncreaseDecimal = priceIncreasePct / 100;
-
-      const demandTotalDecimal = demandPer1Decimal * priceIncreasePct;
-      const demandMultiplier = 1 + demandTotalDecimal;
-
-      const newRevenue = annualRevenue * (1 + priceIncreaseDecimal) * demandMultiplier;
-      const newProfit = newRevenue * marginDecimal;
-
-      const profitDelta = newProfit - baseProfit;
-
-      const breakEvenDemandMultiplier = 1 / (1 + priceIncreaseDecimal);
-      const breakEvenDemandTotalDecimal = breakEvenDemandMultiplier - 1;
-
-      scenarios.push({
-        priceIncreaseDecimal: priceIncreaseDecimal,
-        demandTotalDecimal: demandTotalDecimal,
-        newRevenue: newRevenue,
-        newProfit: newProfit,
-        profitDelta: profitDelta,
-        breakEvenDemandTotalDecimal: breakEvenDemandTotalDecimal
-      });
-
+    if (priceIncrease2 > 25 || priceIncrease3 > 25 || priceIncrease5 > 25) {
+      showError("Price increase values must be 25% or lower.");
+      return;
     }
 
-    let completedCount = 0;
-
-    for (let j = 0; j < scenarios.length; j += 1) {
-      completedCount += 1;
-    }
-
-    const scenariosSorted = scenarios.slice().sort(function (a, b) {
-      return b.profitDelta - a.profitDelta;
-    });
-
-    const best = scenariosSorted[0];
-    const second = scenariosSorted.length > 1 ? scenariosSorted[1] : null;
-
-    let positiveCount = 0;
-
-    for (let k = 0; k < scenarios.length; k += 1) {
-      if (scenarios[k].profitDelta > 0) {
-        positiveCount += 1;
+    if (priceRealisationPct !== null) {
+      if (!Number.isFinite(priceRealisationPct)) {
+        showError("Enter a valid numeric value for price realisation rate.");
+        return;
+      }
+      if (priceRealisationPct < 0 || priceRealisationPct > 100) {
+        showError("Price realisation rate must be between 0 and 100.");
+        return;
       }
     }
 
-    let pricingPowerLabel = "Unclear pricing power";
-    let pricingPowerReason = "Your demand response assumption makes outcomes mixed across small price changes.";
-
-    if (positiveCount === scenarios.length) {
-      pricingPowerLabel = "Pricing power present";
-      pricingPowerReason = "All tested price increases improve estimated profit under your demand response assumption.";
+    if (variableCostPctOfRevenue !== null) {
+      if (!Number.isFinite(variableCostPctOfRevenue)) {
+        showError("Enter a valid numeric value for variable cost percent.");
+        return;
+      }
+      if (variableCostPctOfRevenue < 0 || variableCostPctOfRevenue > 100) {
+        showError("Variable cost percent must be between 0 and 100.");
+        return;
+      }
     }
 
-    if (positiveCount === 0) {
-      pricingPowerLabel = "Low pricing power";
-      pricingPowerReason = "All tested price increases reduce estimated profit under your demand response assumption.";
+    if (orderCount !== null) {
+      if (!Number.isFinite(orderCount)) {
+        showError("Enter a valid numeric value for annual order count.");
+        return;
+      }
+      if (orderCount <= 0) {
+        showError("Annual order count must be greater than zero.");
+        return;
+      }
     }
 
-    const baseProfitRounded = formatNumber(baseProfit);
-    const marginPctRounded = Math.round(marginDecimal * 100);
+    /* BASELINE CALCULATION */
+    const grossMarginDecimal = grossMarginPct / 100;
+    const baselineRevenue = annualRevenue;
+    const baselineGrossProfit = baselineRevenue * grossMarginDecimal;
 
-    let entitySentence = "";
+    const baselineVariableCost = baselineRevenue - baselineGrossProfit;
+    const baselineVariableCostPctCalculated = baselineRevenue === 0 ? 0 : baselineVariableCost / baselineRevenue;
 
-    if (completedCount === 1) {
-      entitySentence =
-        "Only one scenario is evaluated.";
-    } else if (completedCount === 2) {
-      entitySentence =
-        "Both scenarios are evaluated side by side.";
-    } else {
-      const remainder = completedCount - 2;
-      entitySentence =
-        "Top two scenarios are highlighted, with " + remainder + " additional scenario" + (remainder === 1 ? "" : "s") + " included.";
-    }
+    const baselineAverageOrderValue = orderCount === null ? null : baselineRevenue / orderCount;
+    const baselineGrossProfitPerOrder = orderCount === null ? null : baselineGrossProfit / orderCount;
 
-    function formatScenarioRow(s) {
+    /* SCENARIO CALCULATION */
+    const effectiveRealisationDecimal = priceRealisationPct === null ? 1 : priceRealisationPct / 100;
+    const demandChangePer1Decimal = demandChangePer1Pct / 100;
 
-      const priceIncPct = Math.round(s.priceIncreaseDecimal * 100);
-      const demandTotalPct = Math.round(s.demandTotalDecimal * 100);
-      const revenueRounded = formatNumber(s.newRevenue);
-      const profitRounded = formatNumber(s.newProfit);
-      const deltaRounded = formatNumber(s.profitDelta);
-      const breakEvenDemandPct = Math.round(s.breakEvenDemandTotalDecimal * 100);
+    const scenarioIncrements = [
+      { label: "Scenario A", priceIncreasePct: priceIncrease2 },
+      { label: "Scenario B", priceIncreasePct: priceIncrease3 },
+      { label: "Scenario C", priceIncreasePct: priceIncrease5 }
+    ];
 
-      const deltaText = s.profitDelta >= 0 ? "+" + deltaRounded : String(deltaRounded);
+    const scenarioResults = scenarioIncrements.map(function (s) {
+      const priceIncreaseDecimal = s.priceIncreasePct / 100;
+      const realisedPriceIncreaseDecimal = priceIncreaseDecimal * effectiveRealisationDecimal;
+
+      const demandChangeDecimal = s.priceIncreasePct * demandChangePer1Decimal;
+      const demandMultiplier = 1 + demandChangeDecimal;
+
+      const scenarioRevenue =
+        baselineRevenue * (1 + realisedPriceIncreaseDecimal) * demandMultiplier;
+
+      const scenarioGrossProfit = scenarioRevenue * grossMarginDecimal;
+
+      const scenarioVariableCostAssumption =
+        variableCostPctOfRevenue === null
+          ? scenarioRevenue * baselineVariableCostPctCalculated
+          : scenarioRevenue * (variableCostPctOfRevenue / 100);
+
+      const scenarioContribution = scenarioRevenue - scenarioVariableCostAssumption;
+
+      return {
+        label: s.label,
+        priceIncreasePct: s.priceIncreasePct,
+        realisedPriceIncreasePct: s.priceIncreasePct * effectiveRealisationDecimal,
+        demandChangePct: s.priceIncreasePct * demandChangePer1Pct,
+        scenarioRevenue: scenarioRevenue,
+        scenarioGrossProfit: scenarioGrossProfit,
+        scenarioContribution: scenarioContribution
+      };
+    });
+
+    const scenarioResultsSorted = scenarioResults.slice().sort(function (a, b) {
+      return b.scenarioGrossProfit - a.scenarioGrossProfit;
+    });
+
+    const bestScenario = scenarioResultsSorted[0];
+
+    const scenarioGrossProfitBest = bestScenario.scenarioGrossProfit;
+    const scenarioRevenueBest = bestScenario.scenarioRevenue;
+
+    const grossProfitDelta = scenarioGrossProfitBest - baselineGrossProfit;
+    const grossProfitDeltaPct = baselineGrossProfit === 0 ? 0 : grossProfitDelta / baselineGrossProfit;
+
+    const revenueDelta = scenarioRevenueBest - baselineRevenue;
+    const revenueDeltaPct = baselineRevenue === 0 ? 0 : revenueDelta / baselineRevenue;
+
+    const derivedEffectivePriceMovePct = bestScenario.realisedPriceIncreasePct;
+    const derivedDemandMovePct = bestScenario.demandChangePct;
+
+    /* SENSITIVITY CALCULATION */
+    const onePctPriceIncreaseDecimal = 0.01 * effectiveRealisationDecimal;
+    const onePctDemandChangeDecimal = 1 * demandChangePer1Decimal;
+
+    const sensitivityRevenue =
+      baselineRevenue * (1 + onePctPriceIncreaseDecimal) * (1 + onePctDemandChangeDecimal);
+
+    const sensitivityGrossProfit = sensitivityRevenue * grossMarginDecimal;
+    const sensitivityGrossProfitDelta = sensitivityGrossProfit - baselineGrossProfit;
+
+    /* REPORT TEXT VARIABLES */
+    const baselineRevenueDisplay = formatNumber(baselineRevenue);
+    const baselineGrossProfitDisplay = formatNumber(baselineGrossProfit);
+
+    const scenarioRevenueDisplay = formatNumber(scenarioRevenueBest);
+    const scenarioGrossProfitDisplay = formatNumber(scenarioGrossProfitBest);
+
+    const grossProfitDeltaDisplay = formatNumber(grossProfitDelta);
+    const grossProfitDeltaPctDisplay = Math.round(grossProfitDeltaPct * 100);
+
+    const revenueDeltaDisplay = formatNumber(revenueDelta);
+    const revenueDeltaPctDisplay = Math.round(revenueDeltaPct * 100);
+
+    const effectivePriceMovePctDisplay = Math.round(derivedEffectivePriceMovePct);
+    const demandMovePctDisplay = Math.round(derivedDemandMovePct);
+
+    const sensitivityGrossProfitDeltaDisplay = formatNumber(sensitivityGrossProfitDelta);
+
+    const baselineAverageOrderValueDisplay =
+      baselineAverageOrderValue === null ? "Not provided" : formatNumber(baselineAverageOrderValue);
+
+    const baselineGrossProfitPerOrderDisplay =
+      baselineGrossProfitPerOrder === null ? "Not provided" : formatNumber(baselineGrossProfitPerOrder);
+
+    const priceRealisationDisplay =
+      priceRealisationPct === null ? "100" : String(Math.round(priceRealisationPct));
+
+    const variableCostPctDisplay =
+      variableCostPctOfRevenue === null
+        ? String(Math.round(baselineVariableCostPctCalculated * 100))
+        : String(Math.round(variableCostPctOfRevenue));
+
+    const completedCount = scenarioResults.length;
+
+    const scenariosTableRows = scenarioResults.map(function (s) {
+      const scenarioRevenueCell = formatNumber(s.scenarioRevenue);
+      const scenarioGrossProfitCell = formatNumber(s.scenarioGrossProfit);
+
+      const profitDelta = s.scenarioGrossProfit - baselineGrossProfit;
+      const profitDeltaPct = baselineGrossProfit === 0 ? 0 : profitDelta / baselineGrossProfit;
+
+      const profitDeltaCell = formatNumber(profitDelta);
+      const profitDeltaPctCell = Math.round(profitDeltaPct * 100);
+
+      const realisedPricePctCell = Math.round(s.realisedPriceIncreasePct);
+      const demandPctCell = Math.round(s.demandChangePct);
 
       return (
         "<tr>" +
-          "<td style='padding:10px 8px;border-bottom:1px solid rgba(148,163,184,0.35)'>" + priceIncPct + "%</td>" +
-          "<td style='padding:10px 8px;border-bottom:1px solid rgba(148,163,184,0.35)'>" + demandTotalPct + "%</td>" +
-          "<td style='padding:10px 8px;border-bottom:1px solid rgba(148,163,184,0.35)'>" + breakEvenDemandPct + "%</td>" +
-          "<td style='padding:10px 8px;border-bottom:1px solid rgba(148,163,184,0.35)'>" + revenueRounded + "</td>" +
-          "<td style='padding:10px 8px;border-bottom:1px solid rgba(148,163,184,0.35)'>" + profitRounded + "</td>" +
-          "<td style='padding:10px 8px;border-bottom:1px solid rgba(148,163,184,0.35)'>" + deltaText + "</td>" +
+        "<td style='padding:8px 10px;border-top:1px solid #e5e7eb'>" + s.label + "</td>" +
+        "<td style='padding:8px 10px;border-top:1px solid #e5e7eb;text-align:right'>" + realisedPricePctCell + "%</td>" +
+        "<td style='padding:8px 10px;border-top:1px solid #e5e7eb;text-align:right'>" + demandPctCell + "%</td>" +
+        "<td style='padding:8px 10px;border-top:1px solid #e5e7eb;text-align:right'>" + scenarioRevenueCell + "</td>" +
+        "<td style='padding:8px 10px;border-top:1px solid #e5e7eb;text-align:right'>" + scenarioGrossProfitCell + "</td>" +
+        "<td style='padding:8px 10px;border-top:1px solid #e5e7eb;text-align:right'>" + profitDeltaCell + "</td>" +
+        "<td style='padding:8px 10px;border-top:1px solid #e5e7eb;text-align:right'>" + profitDeltaPctCell + "%</td>" +
         "</tr>"
       );
+    }).join("");
 
-    }
+    const bestScenarioLabel = bestScenario.label;
+    const bestScenarioPriceIncreasePct = Math.round(bestScenario.priceIncreasePct);
 
-    let mechanicsHighlight = "";
+    /* REPORT RENDER */
+    const report =
+      "<p><strong>Diagnostic Summary</strong></p>" +
+      "<p>Baseline revenue is " + baselineRevenueDisplay + " with gross profit of " + baselineGrossProfitDisplay + " at a " + Math.round(grossMarginPct) + "% gross margin. Under the strongest tested price move (" + bestScenarioLabel + "), revenue shifts to " + scenarioRevenueDisplay + " and gross profit shifts to " + scenarioGrossProfitDisplay + ", a change of " + grossProfitDeltaDisplay + " (" + grossProfitDeltaPctDisplay + "%).</p>" +
 
-    if (completedCount >= 3 && second) {
-
-      const bestPriceIncPct = Math.round(best.priceIncreaseDecimal * 100);
-      const bestDeltaRounded = formatNumber(best.profitDelta);
-
-      const secondPriceIncPct = Math.round(second.priceIncreaseDecimal * 100);
-      const secondDeltaRounded = formatNumber(second.profitDelta);
-
-      mechanicsHighlight =
-        "Best scenario is a " + bestPriceIncPct + "% increase with profit change of " +
-        (best.profitDelta >= 0 ? "+" + bestDeltaRounded : String(bestDeltaRounded)) +
-        ". Second best is " + secondPriceIncPct + "% with profit change of " +
-        (second.profitDelta >= 0 ? "+" + secondDeltaRounded : String(secondDeltaRounded)) + ".";
-
-    } else if (completedCount === 2 && second) {
-
-      mechanicsHighlight =
-        "Two scenarios were compared and ranked by profit change.";
-
-    } else {
-
-      mechanicsHighlight =
-        "Scenario outcomes are computed from revenue, margin, and demand response.";
-
-    }
-
-    let structuralRisk = "";
-
-    if (positiveCount === 0) {
-      structuralRisk =
-        "Your assumed demand sensitivity overwhelms the price uplift, so profit falls even when pricing increases. If this is accurate, discount control, retention, and product mix matter more than list price moves.";
-    } else if (positiveCount < scenarios.length) {
-      structuralRisk =
-        "Profit gains depend on keeping demand loss below the break-even threshold. If discounting, churn, or competitor responses are not tracked tightly, the business can misread pricing as a win while orders and margin quality deteriorate.";
-    } else {
-      structuralRisk =
-        "The model suggests pricing uplift can improve profit without more volume, but the risk is execution drift. If your sales team offsets increases with discounts or longer terms, the realised pricing power will be lower than the scenario.";
-    }
-
-    const managementQuestions =
-      "<ol style='margin:10px 0 0 18px'>" +
-        "<li>Where can pricing tighten first without triggering customer churn by segment or channel?</li>" +
-        "<li>What discount rules and approvals stop price increases being given back in negotiations?</li>" +
-        "<li>Do supplier terms, delivery capacity, or service levels constrain a clean price change rollout?</li>" +
-      "</ol>";
-
-    const tableHeader =
+      "<p><strong>Key Mechanics</strong></p>" +
+      "<p>The scenario assumes " + priceRealisationDisplay + "% price realisation and variable costs at " + variableCostPctDisplay + "% of revenue. In the best case tested, the realised price move is " + effectivePriceMovePctDisplay + "% and the modelled demand change is " + demandMovePctDisplay + "%, producing a revenue change of " + revenueDeltaDisplay + " (" + revenueDeltaPctDisplay + "%).</p>" +
       "<table style='width:100%;border-collapse:collapse;margin-top:10px'>" +
-        "<thead>" +
-          "<tr>" +
-            "<th style='text-align:left;padding:10px 8px;border-bottom:1px solid rgba(148,163,184,0.6)'>Price increase</th>" +
-            "<th style='text-align:left;padding:10px 8px;border-bottom:1px solid rgba(148,163,184,0.6)'>Demand change</th>" +
-            "<th style='text-align:left;padding:10px 8px;border-bottom:1px solid rgba(148,163,184,0.6)'>Break-even demand</th>" +
-            "<th style='text-align:left;padding:10px 8px;border-bottom:1px solid rgba(148,163,184,0.6)'>New revenue</th>" +
-            "<th style='text-align:left;padding:10px 8px;border-bottom:1px solid rgba(148,163,184,0.6)'>New profit</th>" +
-            "<th style='text-align:left;padding:10px 8px;border-bottom:1px solid rgba(148,163,184,0.6)'>Profit change</th>" +
-          "</tr>" +
-        "</thead>" +
-        "<tbody>";
+      "<thead>" +
+      "<tr>" +
+      "<th style='text-align:left;padding:8px 10px;border-bottom:1px solid #e5e7eb'>Scenario</th>" +
+      "<th style='text-align:right;padding:8px 10px;border-bottom:1px solid #e5e7eb'>Realised price</th>" +
+      "<th style='text-align:right;padding:8px 10px;border-bottom:1px solid #e5e7eb'>Demand change</th>" +
+      "<th style='text-align:right;padding:8px 10px;border-bottom:1px solid #e5e7eb'>Revenue</th>" +
+      "<th style='text-align:right;padding:8px 10px;border-bottom:1px solid #e5e7eb'>Gross profit</th>" +
+      "<th style='text-align:right;padding:8px 10px;border-bottom:1px solid #e5e7eb'>Profit delta</th>" +
+      "<th style='text-align:right;padding:8px 10px;border-bottom:1px solid #e5e7eb'>Profit delta %</th>" +
+      "</tr>" +
+      "</thead>" +
+      "<tbody>" +
+      scenariosTableRows +
+      "</tbody>" +
+      "</table>" +
+      "<p style='margin-top:10px'>Sensitivity: a 1% price increase (at the assumed realisation and demand response) shifts gross profit by " + sensitivityGrossProfitDeltaDisplay + ".</p>" +
 
-    let rows = "";
+      "<p><strong>Operational Interpretation</strong></p>" +
+      "<p>If gross profit rises while revenue is flat or down, the business has pricing power that is not dependent on extra capacity or more orders. In this model the best tested move is " + bestScenarioPriceIncreasePct + "%, delivering a gross profit change of " + grossProfitDeltaDisplay + " while demand shifts by " + demandMovePctDisplay + "%, which is typically managed through quoting discipline, renewal execution, and discount control.</p>" +
 
-    for (let t = 0; t < scenarios.length; t += 1) {
-      rows += formatScenarioRow(scenarios[t]);
-    }
+      "<p><strong>Structural Risk Observation</strong></p>" +
+      "<p>This output is only as stable as the demand response assumption and realised price discipline. If price leakage widens by 5 points from the assumed " + priceRealisationDisplay + "%, or if customers react more aggressively than " + demandChangePer1Pct + "% per 1%, the expected profit delta of " + grossProfitDeltaDisplay + " can compress quickly.</p>" +
 
-    const tableFooter =
-        "</tbody>" +
-      "</table>";
+      "<p><strong>Management Questions</strong></p>" +
+      "<p>1) Where is price currently set by policy versus by sales discretion, and how does that affect the " + priceRealisationDisplay + "% realisation assumption?</p>" +
+      "<p>2) Which customer segments would absorb a " + bestScenarioPriceIncreasePct + "% move with the smallest order loss, and what would that do to gross profit over the next 60 days?</p>" +
+      "<p>3) Which discount behaviours or rebate structures could be tightened to protect the modelled " + grossProfitDeltaDisplay + " uplift?</p>" +
 
-    const selectiveEngagementNote =
-      "This calculator evaluates one narrow dimension of business structure: how price changes interact with demand assumptions to shift profit. Deeper diagnostics examine profit drivers, cost structure, capital deployment, cash flow timing, revenue concentration, supplier dynamics, and forward operating scenarios. If this diagnostic thinking resonates, use the Contact page to discuss fit and scope.";
+      "<p><strong>Selective Engagement Note</strong></p>" +
+      "<p>This calculator evaluates only one narrow dimension of business structure: profit sensitivity to small price movement under an assumed demand response. Deeper diagnostic work examines interactions between profit drivers, cost structure, capital deployment, cash flow timing, revenue concentration, supplier dynamics, and forward operating scenarios. Only a limited number of businesses are worked with at any given time because the analysis requires detailed operational understanding. If this diagnostic thinking resonates, use the Contact page to discuss fit.</p>";
 
-    resultContainer.innerHTML =
-      "<div class='tool-result'>" +
-        "<p><strong>Diagnostic Summary</strong></p>" +
-        "<p>Base profit is " + baseProfitRounded + " at a " + marginPctRounded + "% gross margin. " +
-        pricingPowerLabel + ": " + pricingPowerReason + " " + entitySentence + "</p>" +
-
-        "<p><strong>Key Mechanics</strong></p>" +
-        "<p>Profit moves in this model are driven by the price uplift multiplied by the demand response you supplied, with gross margin held constant. " +
-        "Break-even demand shows the total demand drop that would cancel the revenue uplift for each price move. " + mechanicsHighlight + "</p>" +
-
-        "<p><strong>Operational Interpretation</strong></p>" +
-        "<p>If orders are steady and discounts are controlled, a small price increase lifts profit across every invoice with no extra capacity load. " +
-        "If demand falls faster than expected or sales concessions increase, the price move can look positive in headline revenue but weaken margin quality and customer retention.</p>" +
-
-        "<p><strong>Structural Risk Observation</strong></p>" +
-        "<p>" + structuralRisk + "</p>" +
-
-        "<p><strong>Management Questions</strong></p>" +
-        managementQuestions +
-
-        "<p><strong>Selective Engagement Note</strong></p>" +
-        "<p>" + selectiveEngagementNote + "</p>" +
-
-        tableHeader +
-        rows +
-        tableFooter +
-      "</div>";
-
+    resultContainer.innerHTML = report;
   }
 
   calculateButton.addEventListener("click", runDiagnostic);
 
   shareButton.addEventListener("click", function () {
-
     const url = window.location.href;
 
     const shareLink =
@@ -265,7 +299,5 @@ document.addEventListener("DOMContentLoaded", function () {
       encodeURIComponent("Useful diagnostic tool: " + url);
 
     window.open(shareLink, "_blank");
-
   });
-
 });

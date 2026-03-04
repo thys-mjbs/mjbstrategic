@@ -40,16 +40,10 @@
 
   <main class="site-main tool-page">
     <div style="max-width:720px;margin:0 auto">
-      <h1>Pricing Power Sensitivity Calculator</h1>
-      <p>
-        This diagnostic estimates how total profit shifts when prices rise by small increments under your assumed demand response. It treats gross margin as a stable percentage and tests whether profit improves without adding volume.
-      </p>
-      <p>
-        In real businesses, price moves show up as list price changes, discount tightening, surcharge policies, or minimum order enforcement. The operational reality is that demand rarely stays flat, so the net outcome depends on how orders, churn, and deal sizes react.
-      </p>
-      <p>
-        This matters because small price decisions compound across every invoice and can outperform growth efforts if demand holds. It also exposes when the business is already at the edge of customer tolerance and needs a tighter pricing and retention plan.
-      </p>
+      <h1>Pricing Power Sensitivity Tool</h1>
+      <p>This diagnostic measures how total profit changes when pricing shifts slightly and demand responds. It isolates pricing power from volume-driven growth.</p>
+      <p>In real businesses this shows up in quoting behaviour, discount discipline, renewal uplifts, and list price adjustments. The operational reality is that a small price move often changes order intake and gross profit at the same time.</p>
+      <p>This matters because pricing decisions can move profit faster than capacity expansion or sales hiring. Operators need to see whether margin and demand dynamics support disciplined price increases.</p>
     </div>
   
     <section class="tool-section">
@@ -57,48 +51,106 @@
         <div class="tool-field">
           <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
             <label for="annualRevenue">Annual revenue</label>
-            <input id="annualRevenue" type="number" inputmode="decimal" style="width:160px" />
+            <input id="annualRevenue" type="number" placeholder="e.g., 25000000" style="width:160px" />
           </div>
           <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-            Use last 12 months billed revenue, before tax.
+            Total sales revenue for the last full year.
           </p>
         </div>
   
         <div class="tool-field">
           <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-            <label for="grossMarginPct">Average gross margin (%)</label>
-            <input id="grossMarginPct" type="number" inputmode="decimal" style="width:160px" />
+            <label for="grossMarginPct">Average gross margin %</label>
+            <input id="grossMarginPct" type="number" placeholder="e.g., 32" style="width:160px" />
           </div>
           <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-            Use gross margin after direct costs and COGS.
+            Gross margin as a percent of revenue.
           </p>
         </div>
   
         <div class="tool-field">
           <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
             <label for="demandChangePer1Pct">Demand change per 1% price increase (%)</label>
-            <input id="demandChangePer1Pct" type="number" inputmode="decimal" style="width:160px" />
+            <input id="demandChangePer1Pct" type="number" placeholder="e.g., -1.5" style="width:160px" />
           </div>
           <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-            Negative means fewer orders; positive means demand increases.
+            Expected volume change for each 1% price increase.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="priceIncrease2">Scenario A price increase %</label>
+            <input id="priceIncrease2" type="number" placeholder="e.g., 2" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            First price step to test against the baseline.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="priceIncrease3">Scenario B price increase %</label>
+            <input id="priceIncrease3" type="number" placeholder="e.g., 3" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Second price step to test under the same demand response.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="priceIncrease5">Scenario C price increase %</label>
+            <input id="priceIncrease5" type="number" placeholder="e.g., 5" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Third price step to test for higher uplift.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="priceRealisationPct">Price realisation rate % (optional)</label>
+            <input id="priceRealisationPct" type="number" placeholder="e.g., 85" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Share of planned increase achieved after discounts and leakage.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="variableCostPctOfRevenue">Variable cost % of revenue (optional)</label>
+            <input id="variableCostPctOfRevenue" type="number" placeholder="e.g., 62" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Variable costs as a percent of revenue to validate margin structure.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="orderCount">Annual order count (optional)</label>
+            <input id="orderCount" type="number" placeholder="e.g., 1200" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Approximate number of orders to derive average order value.
           </p>
         </div>
       </div>
     </section>
   
-    <p>
-      This tool assumes your internal reporting can separate price, volume, and margin by product, customer, and channel. If you cannot track discounts, churn, and order frequency alongside gross margin, pricing decisions will look cleaner on paper than they behave in cash generation.
-    </p>
+    <p>Many of the inputs requested by this diagnostic are metrics that disciplined operators typically monitor through internal management reporting. If a number requested here is not immediately available it often indicates that the current reporting structure does not isolate that metric clearly. Businesses operating with strong financial visibility normally track these figures regularly because they influence pricing decisions, supplier negotiations, operational planning, capital allocation, and risk management. Part of the work performed by MJB Strategic often involves helping companies design internal reporting structures that surface these metrics consistently so management can make better operational decisions.</p>
   
     <div class="tool-buttons">
-      <button id="calculateButton" class="tool-button">Run diagnostic</button>
-      <button id="shareWhatsAppButton" class="tool-button">Share this tool on WhatsApp</button>
+      <button id="calculateButton">Run diagnostic</button>
+      <button id="shareWhatsAppButton">Share this tool on WhatsApp</button>
     </div>
   
     <div id="result"></div>
   
     <div class="tool-buttons" style="text-align:center;margin-top:28px">
-      <button id="contactButton" class="tool-button" onclick="window.location.href='/contact'">
+      <button id="contactButton" onclick="window.location.href='/contact'">
         Contact us to explore fit and start your engagement today
       </button>
     </div>
