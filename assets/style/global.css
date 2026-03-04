@@ -523,10 +523,26 @@
     color: white;
   }
   
+  #contactButton {
+    background-color: #1e3a5f;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
   #calculateButton:hover {
     background-color: #274b78;
   }
   
+  #contactButton:hover {
+    background-color: #274b78;
+  }
+
   #shareWhatsAppButton {
     background-color: #25D366;
     color: white;
