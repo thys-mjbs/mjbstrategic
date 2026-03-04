@@ -39,160 +39,104 @@
   </header>  
 
   <main class="site-main tool-page">
-    <section class="tool-section">
-      <h1>Margin Dilution Detector</h1>
-    </section>
+    <h1>Margin Dilution Detector</h1>
+    <p>This diagnostic measures whether growth in sales volume is increasing total gross profit or eroding it through discount-driven margin loss.</p>
+    <p>Operationally, this shows up when teams celebrate higher units sold while the discount level and unit economics quietly reduce profit per sale.</p>
+    <p>The output matters because operators need to know whether growth is strengthening the profit engine or consuming capacity for less return.</p>
   
     <section class="tool-section">
-      <h2>Diagnostic Introduction</h2>
-      <p>
-        This diagnostic measures whether recent sales volume growth is increasing total gross profit or whether discounting is quietly reducing profitability.
-        It compares gross margin per unit and total gross profit before and after the discounting approach used to win incremental volume.
-      </p>
-      <p>
-        Operationally, businesses commonly encounter this problem when growth targets are pursued through price concessions, promotions, or negotiated discounts.
-        Volume can rise while the profit engine weakens if the discount given away is larger than the profit created by additional units sold.
-      </p>
-      <p>
-        The point of the diagnostic is to separate activity from outcome.
-        Sales teams often report growth, but operators need to verify whether the underlying unit economics and gross profit pool are strengthening or being diluted.
-      </p>
-    </section>
-  
-    <section class="tool-section">
-      <h2>Inputs</h2>
-  
       <div class="tool-input-grid">
         <div class="tool-segment">
-          <h3 style="margin:0 0 10px 0">Unit Economics and Growth</h3>
-  
           <div
             class="tool-segment-grid"
             style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start"
           >
             <div class="tool-field">
               <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-                <label for="avgPrice">Average Selling Price (per unit)</label>
-                <input
-                  id="avgPrice"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  placeholder="e.g., 250.00"
-                  required
-                  style="width:160px"
-                />
+                <label for="avgPrice">Average selling price per unit</label>
+                <input id="avgPrice" type="number" step="0.01" min="0" value="1000" required style="width:160px" />
               </div>
               <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-                Typical invoiced price before discounts are applied.
+                Typical price charged before discounting.
               </p>
             </div>
   
             <div class="tool-field">
               <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-                <label for="unitCost">Direct Cost (per unit)</label>
-                <input
-                  id="unitCost"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  placeholder="e.g., 165.00"
-                  required
-                  style="width:160px"
-                />
+                <label for="unitCost">Direct cost per unit</label>
+                <input id="unitCost" type="number" step="0.01" min="0" value="650" required style="width:160px" />
               </div>
               <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-                Direct cost to deliver one unit, excluding overhead.
+                Variable delivery cost per unit sold.
               </p>
             </div>
   
             <div class="tool-field">
               <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-                <label for="discountPct">Typical Discount Applied (%)</label>
-                <input
-                  id="discountPct"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  placeholder="e.g., 8"
-                  required
-                  style="width:160px"
-                />
+                <label for="discountPct">Typical discount to win sales (%)</label>
+                <input id="discountPct" type="number" step="0.01" min="0" max="100" value="10" required style="width:160px" />
               </div>
               <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-                Average discount used to win sales, as a percentage.
+                Average price reduction given to close deals.
               </p>
             </div>
   
             <div class="tool-field">
               <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-                <label for="volumeGrowthPct">Recent Sales Volume Growth (%)</label>
-                <input
-                  id="volumeGrowthPct"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  placeholder="e.g., 15"
-                  required
-                  style="width:160px"
-                />
+                <label for="volumeGrowthPct">Recent sales volume growth (%)</label>
+                <input id="volumeGrowthPct" type="number" step="0.01" min="0" value="20" required style="width:160px" />
               </div>
               <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-                Percentage increase in units sold versus the prior baseline.
+                Increase in units sold over the recent period.
               </p>
             </div>
   
             <div class="tool-field">
               <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-                <label for="baselineUnits">Baseline Units (optional)</label>
-                <input
-                  id="baselineUnits"
-                  type="number"
-                  min="1"
-                  step="1"
-                  placeholder="e.g., 1000"
-                  style="width:160px"
-                />
+                <label for="baselineUnits">Baseline units in the period (optional)</label>
+                <input id="baselineUnits" type="number" step="1" min="1" value="1000" style="width:160px" />
               </div>
               <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-                Assumed baseline unit volume used to express totals.
+                Used to express profit impact in absolute terms.
+              </p>
+            </div>
+  
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="fixedCosts">Period fixed costs (optional)</label>
+                <input id="fixedCosts" type="number" step="0.01" min="0" value="0" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+                Optional context for contribution after fixed overhead.
               </p>
             </div>
           </div>
         </div>
       </div>
-  
-      <p style="margin:14px 0 0 0">
-        Many of the inputs requested by this diagnostic are metrics that disciplined operators typically monitor through internal management reporting. If a number requested here is not immediately available it often indicates that the current reporting structure does not isolate that metric clearly. Businesses operating with strong financial visibility normally track these figures regularly because they influence pricing decisions, supplier negotiations, operational planning, capital allocation, and risk management. Part of the work performed by MJB Strategic often involves helping companies design internal reporting structures that surface these metrics consistently so management can make better operational decisions.
-      </p>
     </section>
   
-    <section class="tool-section">
-      <h2>Run</h2>
-      <div class="tool-buttons">
-        <button id="calculateButton">Run diagnostic</button>
-        <button id="shareWhatsAppButton">Share this tool on WhatsApp</button>
-      </div>
-    </section>
+    <p>Many of the inputs requested by this diagnostic are metrics that disciplined operators typically monitor through internal management reporting. If a number requested here is not immediately available it often indicates that the current reporting structure does not isolate that metric clearly. Businesses operating with strong financial visibility normally track these figures regularly because they influence pricing decisions, supplier negotiations, operational planning, capital allocation, and risk management. Part of the work performed by MJB Strategic often involves helping companies design internal reporting structures that surface these metrics consistently so management can make better operational decisions.</p>
   
-    <section class="tool-section">
-      <h2>Diagnostic Output</h2>
-      <div id="result"></div>
+    <div class="tool-buttons">
+      <button id="calculateButton">Run diagnostic</button>
+      <button id="shareWhatsAppButton">Share this tool on WhatsApp</button>
+    </div>
   
-      <div style="margin-top:18px;text-align:center">
-        <a
-          href="/contact"
-          role="button"
-          style="display:inline-block;padding:12px 20px;border-radius:8px;border:none;font-size:15px;font-weight:600;background-color:#1e3a5f;color:#ffffff;text-decoration:none"
-        >
-          Explore whether this diagnostic applies to your business
-        </a>
-      </div>
-    </section>
+    <div id="result"></div>
+  
+    <div style="margin-top:18px;text-align:center">
+      <a
+        href="/contact"
+        role="button"
+        style="display:inline-block;padding:12px 20px;border-radius:8px;border:none;font-size:15px;font-weight:600;background-color:#1e3a5f;color:#ffffff;text-decoration:none"
+      >
+        Explore whether this diagnostic applies to your business
+      </a>
+    </div>
   
     <script src="script.js"></script>
   </main>
-  
+    
   <footer class="site-footer">
     <div class="site-footer-inner footer-grid">
   
