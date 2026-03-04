@@ -37,14 +37,122 @@
     </div>
   </header>  
 
+  <main class="site-main">
 
+    <section class="content-block">
+      <h1>Profit Concentration Analyzer</h1>
+    </section>
   
-
-
-
-
+    <section class="content-block">
+      <h2>Diagnostic Introduction</h2>
   
-
+      <p>
+        Businesses often review total revenue when evaluating performance, yet revenue alone does not reveal where profit is actually generated.
+        Two segments with identical revenue may contribute very different levels of profit depending on margin structure.
+      </p>
+  
+      <p>
+        This diagnostic estimates how profit is distributed across different revenue segments such as product lines, service categories,
+        or major customer groups. By calculating the profit contribution from each segment, the tool highlights whether the business
+        depends on a narrow set of activities to generate most of its margin.
+      </p>
+  
+      <p>
+        In operational environments this issue commonly appears when one or two offerings quietly generate the majority of earnings
+        while other activities consume resources but contribute little profit. Identifying profit concentration allows operators to
+        evaluate structural risk and understand which activities truly sustain the business.
+      </p>
+    </section>
+  
+    <section class="content-block">
+      <h2>Segment Inputs</h2>
+  
+      <div class="tool-interface">
+        <h3>Segment 1</h3>
+  
+        <label for="segment1Revenue">Annual revenue</label>
+        <input id="segment1Revenue" type="number" required>
+  
+        <label for="segment1Margin">Gross margin percentage</label>
+        <input id="segment1Margin" type="number" required>
+      </div>
+  
+      <div class="tool-interface">
+        <h3>Segment 2</h3>
+  
+        <label for="segment2Revenue">Annual revenue</label>
+        <input id="segment2Revenue" type="number" required>
+  
+        <label for="segment2Margin">Gross margin percentage</label>
+        <input id="segment2Margin" type="number" required>
+      </div>
+  
+      <div class="tool-interface">
+        <h3>Segment 3 (optional)</h3>
+  
+        <label for="segment3Revenue">Annual revenue (optional)</label>
+        <input id="segment3Revenue" type="number">
+  
+        <label for="segment3Margin">Gross margin percentage (optional)</label>
+        <input id="segment3Margin" type="number">
+      </div>
+  
+      <div class="tool-interface">
+        <h3>Segment 4 (optional)</h3>
+  
+        <label for="segment4Revenue">Annual revenue (optional)</label>
+        <input id="segment4Revenue" type="number">
+  
+        <label for="segment4Margin">Gross margin percentage (optional)</label>
+        <input id="segment4Margin" type="number">
+      </div>
+  
+      <div class="tool-interface">
+        <h3>Segment 5 (optional)</h3>
+  
+        <label for="segment5Revenue">Annual revenue (optional)</label>
+        <input id="segment5Revenue" type="number">
+  
+        <label for="segment5Margin">Gross margin percentage (optional)</label>
+        <input id="segment5Margin" type="number">
+      </div>
+  
+      <div class="tool-interface">
+        <h3>Segment 6 (optional)</h3>
+  
+        <label for="segment6Revenue">Annual revenue (optional)</label>
+        <input id="segment6Revenue" type="number">
+  
+        <label for="segment6Margin">Gross margin percentage (optional)</label>
+        <input id="segment6Margin" type="number">
+      </div>
+    </section>
+  
+    <section class="content-block">
+      <h2>Data Visibility Note</h2>
+  
+      <p>
+        Businesses with disciplined financial visibility usually track this number regularly. If the number is not immediately
+        available it may indicate internal reporting does not isolate the metric clearly. Strong management reporting normally
+        surfaces these figures because they influence operational decisions. Part of the diagnostic work performed by MJB Strategic
+        often involves helping companies structure internal reporting so these metrics become visible and reliable.
+      </p>
+    </section>
+  
+    <section class="content-block">
+      <button id="calculateButton">Run diagnostic</button>
+    </section>
+  
+    <section class="content-block">
+      <div id="result"></div>
+    </section>
+  
+    <section class="content-block">
+      <button id="shareWhatsAppButton">Share this tool on WhatsApp</button>
+    </section>
+  
+  </main>
+  
   <footer class="site-footer">
     <div class="site-footer-inner footer-grid">
   
