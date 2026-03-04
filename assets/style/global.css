@@ -278,7 +278,7 @@
     .home-visual {
       height: 260px;
     }
-
+  
   }
   
   /* =========================
@@ -344,50 +344,49 @@
     }
   
   }
-
+  
   /* =========================
-   Diagnostics Modules
-   ========================= */
-
-.diag-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-  margin-top: 28px;
-}
-
-.diag-card {
-  background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: 8px;
-  padding: 22px;
-}
-
-.diag-card p {
-  margin-top: 0;
-}
-
-.diag-card ul {
-  margin: 12px 0 0 18px;
-  color: #475569;
-}
-
-@media (min-width: 900px) {
+     Diagnostics Modules
+     ========================= */
+  
   .diag-grid {
-    grid-template-columns: 1fr 1fr;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-top: 28px;
   }
-
-  /* Make the last card span full width if odd count */
-  .diag-card:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
+  
+  .diag-card {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 8px;
+    padding: 22px;
   }
-}
-
-/* =========================
-   Back to Top
-   ========================= */
-
-   .back-to-top {
+  
+  .diag-card p {
+    margin-top: 0;
+  }
+  
+  .diag-card ul {
+    margin: 12px 0 0 18px;
+    color: #475569;
+  }
+  
+  @media (min-width: 900px) {
+    .diag-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  
+    .diag-card:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+  }
+  
+  /* =========================
+     Back to Top
+     ========================= */
+  
+  .back-to-top {
     position: fixed;
     right: 24px;
     bottom: 24px;
@@ -414,90 +413,47 @@
   .back-to-top.show {
     display: flex;
   }
-
-   /* =========================
-   Home Page Visual Blocks
-   ========================= */
-
-.home-visual {
-  width: 100%;
-  height: 380px;                     /* was 220px */
-  margin-top: 32px;
-  border-radius: 12px;
-  background-size: cover;
-  background-position: center center;   /* prevents awkward crop */
-  background-repeat: no-repeat;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.08);
-}
-
-.site-main,
-.page-content {
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 40px;
-  padding-right: 40px;
-}
-
-input[type="number"],
-input[type="text"] {
-  padding: 10px 12px;
-  border-radius: 6px;
-  border: 1px solid #cfd6df;
-  font-size: 15px;
-  width: 200px;
-  margin-right: 10px;
-}
-
-input:focus {
-  outline: none;
-  border-color: #2a5bd7;
-  box-shadow: 0 0 0 2px rgba(42,91,215,0.15);
-}
-
-.tool-interface button {
-  padding: 12px 18px;
-  border-radius: 6px;
-  border: none;
-  font-size: 15px;
-  cursor: pointer;
-  margin-top: 12px;
-}
-
-#calculateButton {
-  background-color: #1e2a3a;
-  color: white;
-}
-
-#calculateButton:hover {
-  background-color: #2f3e55;
-}
-
-#shareWhatsAppButton {
-  background-color: #25D366;
-  color: white;
-  margin-top: 12px;
-  margin-bottom: 50px;
-}
-
-#shareWhatsAppButton:hover {
-  background-color: #1ebe5d;
-}
-
-#result {
-  margin-top: 25px;
-  padding: 20px;
-  border-radius: 6px;
-  background: #f5f7fa;
-  border: 1px solid #dfe6ef;
-}
-
-/* =========================
-   Tool Pages
-   ========================= */
-
-   .tool-page > section {
+  
+  /* =========================
+     Home Page Visual Blocks
+     ========================= */
+  
+  .home-visual {
+    width: 100%;
+    height: 380px;
+    margin-top: 32px;
+    border-radius: 12px;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 24px 48px rgba(15, 23, 42, 0.08);
+  }
+  
+  /* =========================
+     Inputs
+     ========================= */
+  
+  input[type="number"],
+  input[type="text"] {
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #cfd6df;
+    font-size: 15px;
+    width: 200px;
+  }
+  
+  input:focus {
+    outline: none;
+    border-color: #2a5bd7;
+    box-shadow: 0 0 0 2px rgba(42,91,215,0.15);
+  }
+  
+  /* =========================
+     Tool Pages
+     ========================= */
+  
+  .tool-page > section {
     padding: 48px 0;
   }
   
@@ -523,10 +479,6 @@ input:focus {
     border: 1px solid rgba(15, 23, 42, 0.08);
     border-radius: 8px;
     padding: 22px;
-  }
-  
-  .tool-segment h3 {
-    margin-bottom: 12px;
   }
   
   .segment-description {
