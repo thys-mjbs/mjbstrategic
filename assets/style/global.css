@@ -453,8 +453,8 @@
      Tool Pages
      ========================= */
   
-  .tool-page > section {
-    padding: 48px 0;
+  .site-main.tool-page > section {
+    padding: 40px 0;
   }
   
   .tool-section {
