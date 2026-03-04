@@ -1,134 +1,110 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
 
   const calculateButton = document.getElementById("calculateButton");
   const shareButton = document.getElementById("shareWhatsAppButton");
   const resultContainer = document.getElementById("result");
 
-  calculateButton.addEventListener("click", function() {
+  function showError(message) {
+    resultContainer.innerHTML = "<p style='color:#b91c1c;font-weight:600'>" + message + "</p>";
+  }
 
-    resultContainer.innerHTML = "";
+  function runDiagnostic() {
 
     const segments = [];
 
-    function readSegment(revId, marginId, index, required) {
-      const revenueField = document.getElementById(revId);
-      const marginField = document.getElementById(marginId);
+    for (let i = 1; i <= 6; i++) {
 
-      const revenueValue = revenueField.value.trim();
-      const marginValue = marginField.value.trim();
+      const revenueField = document.getElementById("segment" + i + "Revenue");
+      const marginField = document.getElementById("segment" + i + "Margin");
 
-      if (required) {
-        if (revenueValue === "") {
-          throw new Error("Segment " + index + " revenue is required.");
+      if (!revenueField || !marginField) continue;
+
+      const revenue = parseFloat(revenueField.value);
+      const margin = parseFloat(marginField.value);
+
+      if (i <= 2) {
+
+        if (!revenueField.value) {
+          showError("Segment " + i + " revenue is required.");
+          return;
         }
-        if (marginValue === "") {
-          throw new Error("Segment " + index + " gross margin is required.");
+
+        if (!marginField.value) {
+          showError("Segment " + i + " gross margin is required.");
+          return;
         }
+
       }
 
-      if (revenueValue === "" || marginValue === "") {
-        return null;
-      }
+      if (!revenue || !margin) continue;
 
-      const revenue = parseFloat(revenueValue);
-      const margin = parseFloat(marginValue) / 100;
+      const profit = revenue * (margin / 100);
 
-      const profit = revenue * margin;
-
-      return {
-        segment: index,
+      segments.push({
         revenue: revenue,
         margin: margin,
         profit: profit
-      };
+      });
+
     }
 
-    try {
-
-      const s1 = readSegment("revenue1", "margin1", 1, true);
-      const s2 = readSegment("revenue2", "margin2", 2, true);
-      const s3 = readSegment("revenue3", "margin3", 3, false);
-      const s4 = readSegment("revenue4", "margin4", 4, false);
-      const s5 = readSegment("revenue5", "margin5", 5, false);
-      const s6 = readSegment("revenue6", "margin6", 6, false);
-
-      [s1, s2, s3, s4, s5, s6].forEach(function(item) {
-        if (item !== null) {
-          segments.push(item);
-        }
-      });
-
-      let totalProfit = 0;
-
-      segments.forEach(function(seg) {
-        totalProfit += seg.profit;
-      });
-
-      segments.sort(function(a, b) {
-        return b.profit - a.profit;
-      });
-
-      const topSegmentShare = (segments[0].profit / totalProfit) * 100;
-
-      let topTwoShare = topSegmentShare;
-
-      if (segments.length > 1) {
-        const secondShare = (segments[1].profit / totalProfit) * 100;
-        topTwoShare = topSegmentShare + secondShare;
-      }
-
-      let concentrationInterpretation = "";
-      let structuralImplication = "";
-
-      if (topTwoShare < 50) {
-        concentrationInterpretation = "Profit appears broadly distributed across multiple revenue segments.";
-        structuralImplication = "The business profit engine appears diversified with multiple activities contributing meaningful economic value.";
-      } else if (topTwoShare >= 50 && topTwoShare < 75) {
-        concentrationInterpretation = "Profit appears moderately concentrated within a limited number of segments.";
-        structuralImplication = "Operational performance depends meaningfully on a smaller group of activities which may deserve closer monitoring.";
-      } else {
-        concentrationInterpretation = "Profit appears highly concentrated within a very small number of segments.";
-        structuralImplication = "A narrow profit base increases exposure to disruption if those specific activities weaken.";
-      }
-
-      const strategicObservation = "Operators often discover that revenue distribution and profit distribution differ materially. Segments generating high revenue do not always produce proportional profit contribution.";
-
-      let output = "";
-
-      output += "<h3>Diagnostic Results</h3>";
-      output += "<p>Total estimated profit across segments: " + totalProfit.toFixed(2) + "</p>";
-      output += "<p>Top segment profit share: " + topSegmentShare.toFixed(2) + "%</p>";
-      output += "<p>Top two segments combined profit share: " + topTwoShare.toFixed(2) + "%</p>";
-
-      output += "<h3>Interpretation</h3>";
-      output += "<p>" + concentrationInterpretation + "</p>";
-
-      output += "<h3>Structural Implications</h3>";
-      output += "<p>" + structuralImplication + "</p>";
-
-      output += "<h3>Strategic Observation</h3>";
-      output += "<p>" + strategicObservation + "</p>";
-
-      output += "<p>This tool evaluates only one narrow dimension of a business structure. Full diagnostic engagements examine the interaction between profit drivers, cost structure, capital deployment, cash flow timing, revenue concentration, supplier leverage, and forward scenario modelling.</p>";
-
-      output += "<p>The calculator therefore acts only as a simplified preview of the analytical framework used inside those engagements.</p>";
-
-      output += "<p>Because this work requires detailed modelling and careful interpretation MJB Strategic intentionally works with a limited number of companies at any given time.</p>";
-
-      output += "<p>If the thinking behind this tool resonates with how you evaluate your business you are welcome to reach out to determine whether there may be a sensible fit to work together.</p>";
-
-      resultContainer.innerHTML = output;
-
-    } catch (error) {
-      resultContainer.innerHTML = "<p>" + error.message + "</p>";
+    if (segments.length === 0) {
+      showError("Enter valid revenue and margin data.");
+      return;
     }
 
-  });
+    let totalProfit = 0;
 
-  shareButton.addEventListener("click", function() {
+    segments.forEach(function (s) {
+      totalProfit += s.profit;
+    });
+
+    segments.sort(function (a, b) {
+      return b.profit - a.profit;
+    });
+
+    const topProfit = segments[0].profit;
+
+    let topTwoProfit = topProfit;
+
+    if (segments.length > 1) {
+      topTwoProfit += segments[1].profit;
+    }
+
+    const topShare = (topProfit / totalProfit) * 100;
+    const topTwoShare = (topTwoProfit / totalProfit) * 100;
+
+    let interpretation = "";
+
+    if (topShare < 40) {
+      interpretation = "Profit appears broadly distributed across segments.";
+    } else if (topShare < 70) {
+      interpretation = "Profit appears moderately concentrated in a small number of segments.";
+    } else {
+      interpretation = "Profit appears highly concentrated in one dominant segment.";
+    }
+
+    resultContainer.innerHTML =
+      "<h3>Diagnostic Results</h3>" +
+      "<p><strong>Total Profit:</strong> " + totalProfit.toFixed(2) + "</p>" +
+      "<p><strong>Top Segment Profit Share:</strong> " + topShare.toFixed(1) + "%</p>" +
+      "<p><strong>Top Two Segments Profit Share:</strong> " + topTwoShare.toFixed(1) + "%</p>" +
+      "<p>" + interpretation + "</p>";
+
+  }
+
+  calculateButton.addEventListener("click", runDiagnostic);
+
+  shareButton.addEventListener("click", function () {
+
     const url = window.location.href;
-    const shareUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(url);
-    window.open(shareUrl, "_blank");
+
+    const shareLink =
+      "https://api.whatsapp.com/send?text=" +
+      encodeURIComponent("Useful diagnostic tool: " + url);
+
+    window.open(shareLink, "_blank");
+
   });
 
 });
