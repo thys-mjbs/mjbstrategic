@@ -41,15 +41,9 @@
   <main class="site-main tool-page">
     <div style="max-width:720px;margin:0 auto">
       <h1>Fixed Cost Exposure Calculator</h1>
-      <p>
-        This diagnostic measures how exposed your profit is to fixed operating costs at current revenue levels. It calculates break-even revenue and margin of safety using your variable cost ratio.
-      </p>
-      <p>
-        In real operations, fixed costs like rent and salaries do not shrink when orders slow down. When revenue drops, the same fixed base consumes a larger share of contribution margin and profitability collapses quickly.
-      </p>
-      <p>
-        This matters because cost structure determines how aggressively you can price, hire, and allocate capacity. It also defines how much revenue decline you can absorb before cash generation turns negative.
-      </p>
+      <p>This diagnostic measures how much fixed operating cost load your revenue must carry before profit turns negative. It calculates break-even revenue and the operating profit buffer created by your current contribution margin.</p>
+      <p>In practice, fixed costs like salaries, rent, and contracted services stay in place while orders fluctuate. When volume softens, the same fixed base is absorbed by fewer invoices, and profitability can disappear quickly even if pricing is unchanged.</p>
+      <p>This matters because cost structure determines how a downturn converts into cash pressure, staffing decisions, and supplier terms stress. Operators need to know whether the business can flex costs fast enough when revenue moves.</p>
     </div>
   
     <section class="tool-section">
@@ -57,48 +51,98 @@
         <div class="tool-field">
           <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
             <label for="monthlyRevenue">Monthly revenue</label>
-            <input id="monthlyRevenue" type="number" inputmode="decimal" style="width:160px" />
+            <input id="monthlyRevenue" type="number" placeholder="e.g., 2500000" style="width:160px" />
           </div>
           <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-            Use average revenue from the last normal trading month.
+            Use average revenue from the last three months.
           </p>
         </div>
   
         <div class="tool-field">
           <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-            <label for="monthlyFixedCosts">Monthly fixed costs</label>
-            <input id="monthlyFixedCosts" type="number" inputmode="decimal" style="width:160px" />
+            <label for="monthlyFixedCosts">Monthly fixed operating costs</label>
+            <input id="monthlyFixedCosts" type="number" placeholder="e.g., 850000" style="width:160px" />
           </div>
           <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-            Include rent, salaries, insurance, and other unavoidable overhead.
+            Rent, salaries, software, insurance, and other fixed overhead.
           </p>
         </div>
   
         <div class="tool-field">
           <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-            <label for="variableCostPercent">Variable cost percent</label>
-            <input id="variableCostPercent" type="number" inputmode="decimal" style="width:160px" />
+            <label for="variableCostPercent">Variable costs as % of revenue</label>
+            <input id="variableCostPercent" type="number" placeholder="e.g., 62" style="width:160px" />
           </div>
           <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-            Percent of revenue consumed by direct costs and fulfilment.
+            Direct costs that scale with orders and fulfilment.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="monthlyDebtService">Monthly debt repayments</label>
+            <input id="monthlyDebtService" type="number" placeholder="e.g., 120000" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Principal and interest paid monthly from operating cash.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="cashReserves">Available cash reserves</label>
+            <input id="cashReserves" type="number" placeholder="e.g., 600000" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Cash that can fund losses without breaking payment terms.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="revenueDeclinePercent">Scenario revenue decline % (optional)</label>
+            <input id="revenueDeclinePercent" type="number" placeholder="e.g., 20" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Set a single downturn assumption for the Scenario state.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="fixedCostReductionPercent">Fixed cost reduction % (optional)</label>
+            <input id="fixedCostReductionPercent" type="number" placeholder="e.g., 8" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Estimated overhead cuts achievable within 60 days.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="variableCostChangePoints">Variable cost change points (optional)</label>
+            <input id="variableCostChangePoints" type="number" placeholder="e.g., 3" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Increase or decrease variable cost % under disruption.
           </p>
         </div>
       </div>
     </section>
   
     <p>
-      This tool assumes your internal reporting can separate fixed costs from variable costs and track monthly revenue consistently. If those numbers are blended across accounts, the diagnostic will show directionally correct pressure but not the true structural exposure.
+      Many of the inputs requested by this diagnostic are metrics that disciplined operators typically monitor through internal management reporting. If a number requested here is not immediately available it often indicates that the current reporting structure does not isolate that metric clearly. Businesses operating with strong financial visibility normally track these figures regularly because they influence pricing decisions, supplier negotiations, operational planning, capital allocation, and risk management. Part of the work performed by MJB Strategic often involves helping companies design internal reporting structures that surface these metrics consistently so management can make better operational decisions.
     </p>
   
     <div class="tool-buttons">
-      <button id="calculateButton" class="tool-button">Run diagnostic</button>
-      <button id="shareWhatsAppButton" class="tool-button">Share this tool on WhatsApp</button>
+      <button id="calculateButton">Run diagnostic</button>
+      <button id="shareWhatsAppButton">Share this tool on WhatsApp</button>
     </div>
   
     <div id="result"></div>
   
     <div class="tool-buttons" style="text-align:center;margin-top:28px">
-      <button id="contactButton" class="tool-button" onclick="window.location.href='/contact'">
+      <button id="contactButton" onclick="window.location.href='/contact'">
         Contact us to explore fit and start your engagement today
       </button>
     </div>
