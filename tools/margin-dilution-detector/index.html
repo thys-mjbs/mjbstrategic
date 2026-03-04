@@ -39,76 +39,133 @@
   </header>  
 
   <main class="site-main tool-page">
+
     <div style="max-width:720px;margin:0 auto">
-      <h1>Margin Dilution Detector</h1>
-      <p>This diagnostic measures whether recent volume growth increased total gross profit or eroded it through weaker unit margin. It compares profit contribution before and after discounting.</p>
-      <p>In real businesses this shows up when sales teams win orders by reducing price while costs stay fixed. You see more invoices and higher units shipped, but cash generation per unit falls.</p>
-      <p>This matters because management can misread volume as momentum while the profit engine is weakening. The output helps isolate whether growth is strengthening contribution or consuming capacity for less profit.</p>
+    <h1>Margin Dilution Diagnostic Tool</h1>
+    
+    <p>This diagnostic evaluates whether increased sales activity is strengthening profit generation or quietly eroding margin. It compares contribution economics before and after discounting and volume expansion. The objective is to isolate whether additional orders are adding incremental profit or weakening the underlying profit engine.</p>
+    
+    <p>In many businesses, revenue growth is achieved through price concessions, promotional activity, or negotiated supplier discounts to close deals. These tactics often increase order volume but compress unit margin at the same time. If the margin reduction exceeds the benefit of additional units sold, the business may be working harder while generating less profit.</p>
+    
+    <p>Management teams typically review revenue growth and order counts but do not always isolate the structural effect of discounting behaviour. Understanding whether volume growth is generating genuine margin leverage or driving margin dilution directly influences pricing policy, discount authority, and sales strategy. This diagnostic isolates that mechanism numerically.</p>
+    
     </div>
-  
+    
     <section class="tool-section">
-      <div class="tool-input-grid">
-        <div class="tool-field">
-          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-            <label for="price">Average selling price per unit</label>
-            <input id="price" type="number" inputmode="decimal" style="width:160px" />
-          </div>
-          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-            Use the typical invoice price before discounts.
-          </p>
-        </div>
-  
-        <div class="tool-field">
-          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-            <label for="cost">Direct cost per unit</label>
-            <input id="cost" type="number" inputmode="decimal" style="width:160px" />
-          </div>
-          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-            Include variable inputs directly tied to each unit sold.
-          </p>
-        </div>
-  
-        <div class="tool-field">
-          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-            <label for="discountPercent">Typical discount applied</label>
-            <input id="discountPercent" type="number" inputmode="decimal" style="width:160px" />
-          </div>
-          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-            Enter the average discount used to win orders.
-          </p>
-        </div>
-  
-        <div class="tool-field">
-          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-            <label for="volumeGrowthPercent">Recent sales volume growth</label>
-            <input id="volumeGrowthPercent" type="number" inputmode="decimal" style="width:160px" />
-          </div>
-          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-            Use the percentage change in units sold.
-          </p>
-        </div>
+    
+    <div class="tool-input-grid">
+    
+    <div class="tool-field">
+      <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+        <label for="price">Average selling price per unit</label>
+        <input id="price" type="number" placeholder="e.g., 120" style="width:160px" />
       </div>
-    </section>
-  
-    <p class="tool-note">
-      For this diagnostic to be useful, you need basic internal visibility into pricing, unit costs, discounting, and unit volumes. If your reporting mixes product lines, bundles, or one-off deals without separating unit economics, the signal will be blurred and the operational interpretation may be wrong.
-    </p>
-  
-    <div class="tool-buttons">
-      <button id="calculateButton" type="button">Run diagnostic</button>
-      <button id="shareWhatsAppButton" type="button">Share this tool on WhatsApp</button>
+      <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+        Typical list price charged for the product or service.
+      </p>
     </div>
-  
+    
+    <div class="tool-field">
+      <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+        <label for="cost">Direct cost per unit</label>
+        <input id="cost" type="number" placeholder="e.g., 70" style="width:160px" />
+      </div>
+      <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+        Variable cost directly associated with producing one unit.
+      </p>
+    </div>
+    
+    <div class="tool-field">
+      <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+        <label for="volume">Current monthly unit volume</label>
+        <input id="volume" type="number" placeholder="e.g., 2500" style="width:160px" />
+      </div>
+      <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+        Average units sold per month at normal pricing.
+      </p>
+    </div>
+    
+    <div class="tool-field">
+      <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+        <label for="discount">Typical sales discount (%)</label>
+        <input id="discount" type="number" placeholder="e.g., 8" style="width:160px" />
+      </div>
+      <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+        Average percentage discount used to win orders.
+      </p>
+    </div>
+    
+    <div class="tool-field">
+      <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+        <label for="growth">Recent volume growth (%)</label>
+        <input id="growth" type="number" placeholder="e.g., 18" style="width:160px" />
+      </div>
+      <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+        Percentage increase in units sold after pricing changes.
+      </p>
+    </div>
+    
+    <div class="tool-field">
+      <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+        <label for="fixedCost">Monthly fixed cost base</label>
+        <input id="fixedCost" type="number" placeholder="e.g., 80000" style="width:160px" />
+      </div>
+      <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+        Fixed operating costs allocated to this product line.
+      </p>
+    </div>
+    
+    <div class="tool-field">
+      <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+        <label for="returns">Product returns or rework (%) (optional)</label>
+        <input id="returns" type="number" placeholder="e.g., 2" style="width:160px" />
+      </div>
+      <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+        Percentage of units that must be replaced or refunded.
+      </p>
+    </div>
+    
+    <div class="tool-field">
+      <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+        <label for="costChange">Supplier cost change (%) (optional)</label>
+        <input id="costChange" type="number" placeholder="e.g., 5" style="width:160px" />
+      </div>
+      <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+        Expected supplier price increase or decrease on direct cost.
+      </p>
+    </div>
+    
+    <div class="tool-field">
+      <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+        <label for="extraDiscount">Additional promotional discount (%) (optional)</label>
+        <input id="extraDiscount" type="number" placeholder="e.g., 3" style="width:160px" />
+      </div>
+      <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+        Temporary promotional discount applied during growth campaigns.
+      </p>
+    </div>
+    
+    </div>
+    
+    </section>
+    
+    <p>Many of the inputs requested by this diagnostic are metrics that disciplined operators typically monitor through internal management reporting. If a number requested here is not immediately available it often indicates that the current reporting structure does not isolate that metric clearly. Businesses operating with strong financial visibility normally track these figures regularly because they influence pricing decisions, supplier negotiations, operational planning, capital allocation, and risk management. Part of the work performed by MJB Strategic often involves helping companies design internal reporting structures that surface these metrics consistently so management can make better operational decisions.</p>
+    
+    <div class="tool-buttons">
+    <button id="calculateButton">Run diagnostic</button> <button id="shareWhatsAppButton">Share this tool on WhatsApp</button>
+    </div>
+    
     <div id="result"></div>
-  
+    
     <div class="tool-buttons" style="text-align:center;margin-top:28px">
       <button id="contactButton" onclick="window.location.href='/contact'">
         Contact us to explore fit and start your engagement today
       </button>
     </div>
-  
+    
     <script src="script.js"></script>
-  </main>
+    
+    </main>
     
   <footer class="site-footer">
     <div class="site-footer-inner footer-grid">
