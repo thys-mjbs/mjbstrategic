@@ -9,6 +9,10 @@ document.addEventListener("DOMContentLoaded", function () {
       "<p style='color:#b91c1c;font-weight:600'>" + message + "</p>";
   }
 
+  function formatNumber(value) {
+    return Math.round(value).toLocaleString();
+  }
+
   function runDiagnostic() {
 
     const segments = [];
@@ -159,22 +163,22 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    const totalProfitRounded = Math.round(totalProfit);
-    const top1ProfitRounded = Math.round(top1.profit);
-    const top2ProfitRounded = top2 ? Math.round(top2.profit) : 0;
+    const totalProfitRounded = formatNumber(totalProfit);
+    const top1ProfitRounded = formatNumber(top1.profit);
+    const top2ProfitRounded = top2 ? formatNumber(top2.profit) : 0;
 
     let keyMechanicsList = "<ul>";
 
     for (let k = 0; k < segments.length; k += 1) {
       const seg = segments[k];
-      const segProfitRounded = Math.round(seg.profit);
+      const segProfitRounded = formatNumber(seg.profit);
       const segShare = seg.profit / totalProfit;
       const segSharePct = Math.round(segShare * 100);
       keyMechanicsList +=
         "<li>" +
         seg.name +
         ": revenue " +
-        Math.round(seg.revenue) +
+        formatNumber(seg.revenue) +
         ", margin " +
         Math.round((seg.marginPercent / 100) * 100) +
         "%, profit " +

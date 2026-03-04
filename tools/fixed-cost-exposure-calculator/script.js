@@ -9,6 +9,10 @@ document.addEventListener("DOMContentLoaded", function () {
       "<p style='color:#b91c1c;font-weight:600'>" + message + "</p>";
   }
 
+  function formatNumber(value) {
+    return Math.round(value).toLocaleString();
+  }
+
   function runDiagnostic() {
 
     const monthlyRevenue = Number(document.getElementById("monthlyRevenue").value);
@@ -82,17 +86,17 @@ document.addEventListener("DOMContentLoaded", function () {
       collapseNarrative = "A 30% revenue decline pushes profit below zero, which signals moderate downside exposure.";
     }
 
-    const breakEvenRounded = Math.round(breakEvenRevenue);
-    const currentProfitRounded = Math.round(currentProfit);
-    const currentContributionRounded = Math.round(currentContributionMargin);
+    const breakEvenRounded = formatNumber(breakEvenRevenue);
+    const currentProfitRounded = formatNumber(currentProfit);
+    const currentContributionRounded = formatNumber(currentContributionMargin);
 
     const marginOfSafetyPct = Math.round(marginOfSafetyRate * 100);
     const contributionMarginPct = Math.round(contributionMarginRate * 100);
     const fixedCoveragePct = Math.round(fixedCoverageRate * 100);
 
-    const profit10Rounded = Math.round(profit10);
-    const profit20Rounded = Math.round(profit20);
-    const profit30Rounded = Math.round(profit30);
+    const profit10Rounded = formatNumber(profit10);
+    const profit20Rounded = formatNumber(profit20);
+    const profit30Rounded = formatNumber(profit30);
 
     let summaryLine = "Your break-even revenue is " + breakEvenRounded + " per month with a " + contributionMarginPct + "% contribution margin rate.";
     if (!isCurrentlyProfitable) {

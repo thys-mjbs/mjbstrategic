@@ -9,6 +9,10 @@ document.addEventListener("DOMContentLoaded", function () {
       "<p style='color:#b91c1c;font-weight:600'>" + message + "</p>";
   }
 
+  function formatNumber(value) {
+    return Math.round(value).toLocaleString();
+  }
+
   function runDiagnostic() {
 
     const price = Number(document.getElementById("price").value);
@@ -113,12 +117,12 @@ document.addEventListener("DOMContentLoaded", function () {
       riskNote = "Averages can hide loss making deals even when totals look stable.";
     }
 
-    const baselineUnitMarginRounded = Math.round(baselineUnitMargin);
-    const newUnitMarginRounded = Math.round(newUnitMargin);
-    const discountedPriceRounded = Math.round(discountedPrice);
+    const baselineUnitMarginRounded = formatNumber(baselineUnitMargin);
+    const newUnitMarginRounded = formatNumber(newUnitMargin);
+    const discountedPriceRounded = formatNumber(discountedPrice);
 
-    const baselineTotalMarginRounded = Math.round(baselineTotalMargin);
-    const newTotalMarginRounded = Math.round(newTotalMargin);
+    const baselineTotalMarginRounded = formatNumber(baselineTotalMargin);
+    const newTotalMarginRounded = formatNumber(newTotalMargin);
 
     const baselineMarginPctDisplay = Math.round(baselineMarginPct * 100);
     const newMarginPctDisplay = Math.round(newMarginPct * 100);

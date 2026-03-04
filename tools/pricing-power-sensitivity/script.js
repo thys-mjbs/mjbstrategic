@@ -9,6 +9,10 @@ document.addEventListener("DOMContentLoaded", function () {
       "<p style='color:#b91c1c;font-weight:600'>" + message + "</p>";
   }
 
+  function formatNumber(value) {
+    return Math.round(value).toLocaleString();
+  }
+
   function runDiagnostic() {
 
     const annualRevenue = Number(document.getElementById("annualRevenue").value);
@@ -104,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
       pricingPowerReason = "All tested price increases reduce estimated profit under your demand response assumption.";
     }
 
-    const baseProfitRounded = Math.round(baseProfit);
+    const baseProfitRounded = formatNumber(baseProfit);
     const marginPctRounded = Math.round(marginDecimal * 100);
 
     let entitySentence = "";
@@ -125,12 +129,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const priceIncPct = Math.round(s.priceIncreaseDecimal * 100);
       const demandTotalPct = Math.round(s.demandTotalDecimal * 100);
-      const revenueRounded = Math.round(s.newRevenue);
-      const profitRounded = Math.round(s.newProfit);
-      const deltaRounded = Math.round(s.profitDelta);
+      const revenueRounded = formatNumber(s.newRevenue);
+      const profitRounded = formatNumber(s.newProfit);
+      const deltaRounded = formatNumber(s.profitDelta);
       const breakEvenDemandPct = Math.round(s.breakEvenDemandTotalDecimal * 100);
 
-      const deltaText = deltaRounded >= 0 ? "+" + deltaRounded : String(deltaRounded);
+      const deltaText = s.profitDelta >= 0 ? "+" + deltaRounded : String(deltaRounded);
 
       return (
         "<tr>" +
@@ -150,16 +154,16 @@ document.addEventListener("DOMContentLoaded", function () {
     if (completedCount >= 3 && second) {
 
       const bestPriceIncPct = Math.round(best.priceIncreaseDecimal * 100);
-      const bestDeltaRounded = Math.round(best.profitDelta);
+      const bestDeltaRounded = formatNumber(best.profitDelta);
 
       const secondPriceIncPct = Math.round(second.priceIncreaseDecimal * 100);
-      const secondDeltaRounded = Math.round(second.profitDelta);
+      const secondDeltaRounded = formatNumber(second.profitDelta);
 
       mechanicsHighlight =
         "Best scenario is a " + bestPriceIncPct + "% increase with profit change of " +
-        (bestDeltaRounded >= 0 ? "+" + bestDeltaRounded : String(bestDeltaRounded)) +
+        (best.profitDelta >= 0 ? "+" + bestDeltaRounded : String(bestDeltaRounded)) +
         ". Second best is " + secondPriceIncPct + "% with profit change of " +
-        (secondDeltaRounded >= 0 ? "+" + secondDeltaRounded : String(secondDeltaRounded)) + ".";
+        (second.profitDelta >= 0 ? "+" + secondDeltaRounded : String(secondDeltaRounded)) + ".";
 
     } else if (completedCount === 2 && second) {
 
