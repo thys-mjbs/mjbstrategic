@@ -507,8 +507,7 @@
     margin-top: 28px;
   }
   
-  #calculateButton,
-  #shareWhatsAppButton {
+  .tool-button {
     padding: 12px 20px;
     border-radius: 8px;
     border: none;
@@ -518,25 +517,25 @@
     transition: all 0.2s ease;
   }
   
-  #calculateButton {
+  .tool-button.primary {
     background-color: #1e3a5f;
     color: white;
   }
   
-  #calculateButton:hover {
+  .tool-button.primary:hover {
     background-color: #274b78;
   }
   
-  #shareWhatsAppButton {
+  .tool-button.whatsapp {
     background-color: #25D366;
     color: white;
     margin-left: 12px;
   }
   
-  #shareWhatsAppButton:hover {
+  .tool-button.whatsapp:hover {
     background-color: #1ebe5d;
   }
-  
+
   #result {
     margin-top: 28px;
     padding: 22px;
