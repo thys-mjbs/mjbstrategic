@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>MJB Strategic</title>
+  <meta name="description" content="Fixed-scope diagnostic reviews that surface the structural sources of operational and financial pressure inside owner-managed businesses." />
+
+  <link rel="icon" href="/assets/style/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="/assets/style/global.css" />
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="site-brand">
+        <a href="/">MJB Strategic</a>
+      </div>
+  
+      <input type="checkbox" id="nav-toggle" class="nav-toggle">
+  
+      <label for="nav-toggle" class="nav-toggle-label">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+  
+      <nav class="site-nav">
+        <a href="/home/">Home</a>
+        <a href="/diagnostics/">Diagnostics</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>  
+
+  <main class="site-main tool-page">
+    <div style="max-width:720px;margin:0 auto">
+      <h1>Fixed Cost Exposure Calculator</h1>
+      <p>
+        This diagnostic measures how exposed your profit is to fixed operating costs at current revenue levels. It calculates break-even revenue and margin of safety using your variable cost ratio.
+      </p>
+      <p>
+        In real operations, fixed costs like rent and salaries do not shrink when orders slow down. When revenue drops, the same fixed base consumes a larger share of contribution margin and profitability collapses quickly.
+      </p>
+      <p>
+        This matters because cost structure determines how aggressively you can price, hire, and allocate capacity. It also defines how much revenue decline you can absorb before cash generation turns negative.
+      </p>
+    </div>
+  
+    <section class="tool-section">
+      <div class="tool-input-grid">
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="monthlyRevenue">Monthly revenue</label>
+            <input id="monthlyRevenue" type="number" inputmode="decimal" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Use average revenue from the last normal trading month.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="monthlyFixedCosts">Monthly fixed costs</label>
+            <input id="monthlyFixedCosts" type="number" inputmode="decimal" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Include rent, salaries, insurance, and other unavoidable overhead.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="variableCostPercent">Variable cost percent</label>
+            <input id="variableCostPercent" type="number" inputmode="decimal" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Percent of revenue consumed by direct costs and fulfilment.
+          </p>
+        </div>
+      </div>
+    </section>
+  
+    <p>
+      This tool assumes your internal reporting can separate fixed costs from variable costs and track monthly revenue consistently. If those numbers are blended across accounts, the diagnostic will show directionally correct pressure but not the true structural exposure.
+    </p>
+  
+    <div class="tool-buttons">
+      <button id="calculateButton" class="tool-button">Run diagnostic</button>
+      <button id="shareWhatsAppButton" class="tool-button">Share this tool on WhatsApp</button>
+    </div>
+  
+    <div id="result"></div>
+  
+    <div class="tool-buttons" style="text-align:center;margin-top:28px">
+      <button id="contactButton" class="tool-button" onclick="window.location.href='/contact'">
+        Contact us to explore fit and start your engagement today
+      </button>
+    </div>
+  
+    <script src="script.js"></script>
+  </main>
+  
+  <footer class="site-footer">
+    <div class="site-footer-inner footer-grid">
+  
+      <div class="footer-left">
+        <a href="mailto:thys@mjbstrategic.com" class="footer-email">
+          thys@mjbstrategic.com
+        </a>
+        <a href="https://www.linkedin.com/in/matthys-b-062619172/"
+           target="_blank"
+           rel="noopener"
+           class="footer-linkedin">
+          LinkedIn
+        </a>
+      </div>
+  
+      <div class="footer-center">
+        <p>© 2026 MJB Strategic</p>
+        <nav class="footer-nav">
+          <a href="/privacy/">Privacy</a>
+          <a href="/terms/">Terms</a>
+          <a href="/disclaimer/">Disclaimer</a>
+        </nav>
+      </div>
+  
+      <div class="footer-right">
+        <address>
+          Corlett Drive, Illovo<br>
+          Sandton, Gauteng<br>
+          South Africa, 2196
+        </address>
+      </div>
+  
+    </div>
+  </footer>
+
+  <button class="back-to-top" type="button" aria-label="Back to top">↑</button>
+
+  <script>
+    (function () {
+      var btn = document.querySelector(".back-to-top");
+      if (!btn) return;
+
+      function toggle() {
+        if (window.scrollY > 300) btn.classList.add("show");
+        else btn.classList.remove("show");
+      }
+
+      btn.addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      window.addEventListener("scroll", toggle, { passive: true });
+      toggle();
+    })();
+  </script>
+
+</body>
+</html>
