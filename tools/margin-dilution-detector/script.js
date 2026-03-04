@@ -1,107 +1,218 @@
 document.addEventListener("DOMContentLoaded", function () {
-
   const calculateButton = document.getElementById("calculateButton");
   const shareButton = document.getElementById("shareWhatsAppButton");
   const resultContainer = document.getElementById("result");
+
+  const avgPriceInput = document.getElementById("avgPrice");
+  const unitCostInput = document.getElementById("unitCost");
+  const discountPctInput = document.getElementById("discountPct");
+  const volumeGrowthPctInput = document.getElementById("volumeGrowthPct");
 
   function showError(message) {
     resultContainer.innerHTML = "<p style='color:#b91c1c;font-weight:600'>" + message + "</p>";
   }
 
+  function formatMoney(value) {
+    const rounded = Math.round(value * 100) / 100;
+    return rounded.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function formatPct(value) {
+    const rounded = Math.round(value * 100) / 100;
+    return rounded.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%";
+  }
+
   function runDiagnostic() {
+    const avgPrice = Number(avgPriceInput.value);
+    const unitCost = Number(unitCostInput.value);
+    const discountPct = Number(discountPctInput.value);
+    const volumeGrowthPct = Number(volumeGrowthPctInput.value);
 
-    const price = parseFloat(document.getElementById("price").value);
-    const cost = parseFloat(document.getElementById("cost").value);
-    const discount = parseFloat(document.getElementById("discount").value);
-    const growth = parseFloat(document.getElementById("growth").value);
+    const hasValidInputs =
+      Number.isFinite(avgPrice) &&
+      Number.isFinite(unitCost) &&
+      Number.isFinite(discountPct) &&
+      Number.isFinite(volumeGrowthPct) &&
+      avgPrice > 0 &&
+      unitCost >= 0 &&
+      discountPct >= 0 &&
+      discountPct < 100 &&
+      volumeGrowthPct > -100;
 
-    if (isNaN(price) || isNaN(cost) || isNaN(discount) || isNaN(growth)) {
-      showError("Please complete all required inputs before running the diagnostic.");
+    const completedCount = hasValidInputs ? 1 : 0;
+
+    if (completedCount === 0) {
+      showError("Enter valid values for price, cost, discount, and volume growth.");
       return;
     }
 
-    if (price <= 0 || cost < 0) {
-      showError("Selling price and cost must be valid positive numbers.");
-      return;
+    const originalUnitMargin = avgPrice - unitCost;
+    const discountedPrice = avgPrice * (1 - discountPct / 100);
+    const discountedUnitMargin = discountedPrice - unitCost;
+
+    const volumeFactor = 1 + volumeGrowthPct / 100;
+
+    const baselineTotalMarginIndex = originalUnitMargin * 1;
+    const newTotalMarginIndex = discountedUnitMargin * volumeFactor;
+
+    const absoluteChange = newTotalMarginIndex - baselineTotalMarginIndex;
+
+    let percentChange = null;
+    if (originalUnitMargin !== 0) {
+      percentChange = (absoluteChange / Math.abs(originalUnitMargin)) * 100;
     }
 
-    const discountRate = discount / 100;
-    const growthRate = growth / 100;
+    let breakEvenVolumeGrowthPct = null;
+    if (discountedUnitMargin > 0) {
+      const breakEvenFactor = originalUnitMargin / discountedUnitMargin;
+      breakEvenVolumeGrowthPct = (breakEvenFactor - 1) * 100;
+    }
 
-    const originalMarginPerUnit = price - cost;
-    const discountedPrice = price * (1 - discountRate);
-    const discountedMarginPerUnit = discountedPrice - cost;
+    const marginStatus =
+      newTotalMarginIndex > baselineTotalMarginIndex
+        ? "profit leverage"
+        : newTotalMarginIndex < baselineTotalMarginIndex
+        ? "margin dilution"
+        : "neutral effect";
 
-    const baselineVolume = 1;
-    const newVolume = baselineVolume * (1 + growthRate);
-
-    const baselineProfit = originalMarginPerUnit * baselineVolume;
-    const newProfit = discountedMarginPerUnit * newVolume;
-
-    const profitChange = newProfit - baselineProfit;
-    const marginChangePercent = ((discountedMarginPerUnit - originalMarginPerUnit) / originalMarginPerUnit) * 100;
+    const guardrails = [];
+    if (originalUnitMargin <= 0) {
+      guardrails.push(
+        "Baseline unit margin is not positive at the stated price and cost, so growth cannot rescue profitability without structural change."
+      );
+    }
+    if (discountedUnitMargin <= 0) {
+      guardrails.push(
+        "After discounting, unit margin is not positive, meaning each additional unit adds workload without contributing profit."
+      );
+    }
 
     let diagnosticSummary = "";
-    let operationalInterpretation = "";
-    let structuralRisk = "";
-    let managementQuestions = "";
-
-    diagnosticSummary += "<h3>Diagnostic Summary</h3>";
-
-    if (newProfit > baselineProfit) {
-      diagnosticSummary += "<p>";
-      diagnosticSummary += "The comparison indicates that the additional sales volume generated through discounting still produces more profit than the original pricing structure. Although margin per unit declines due to the discount, the increase in units sold compensates for that reduction. In this scenario the business is gaining profit leverage from higher sales volume despite lower pricing.";
-      diagnosticSummary += "</p>";
-    } else if (newProfit < baselineProfit) {
-      diagnosticSummary += "<p>";
-      diagnosticSummary += "The comparison indicates that the increase in sales volume does not offset the margin lost through discounting. Even though revenue may appear to be expanding, the profit produced by those sales is lower than the profit generated at the original price level. This pattern suggests margin dilution rather than genuine profit growth.";
-      diagnosticSummary += "</p>";
+    if (marginStatus === "profit leverage") {
+      diagnosticSummary =
+        "At the stated discount and volume change, the business is generating more total gross profit per baseline unit volume. This indicates that increased activity is more than offsetting the unit margin loss created by discounting.";
+    } else if (marginStatus === "margin dilution") {
+      diagnosticSummary =
+        "At the stated discount and volume change, the business is generating less total gross profit per baseline unit volume. This indicates that sales growth is being bought with unit margin and the volume increase is not compensating for the price concession.";
     } else {
-      diagnosticSummary += "<p>";
-      diagnosticSummary += "The calculation indicates that the increase in sales volume almost exactly offsets the reduction in unit margin caused by discounting. In this situation the business is effectively trading margin for volume without materially changing the overall profit generated from the activity.";
-      diagnosticSummary += "</p>";
+      diagnosticSummary =
+        "At the stated discount and volume change, the business is generating approximately the same total gross profit per baseline unit volume. This indicates that the volume increase is only just offsetting the unit margin loss created by discounting.";
     }
 
-    operationalInterpretation += "<h3>Operational Interpretation</h3>";
-    operationalInterpretation += "<p>";
-    operationalInterpretation += "Discounting changes the economic structure of each sale by lowering the contribution margin generated per unit. When this reduction is combined with higher sales volume, the overall effect depends on whether additional units can replace the lost margin. Businesses that rely heavily on discounting often experience rising revenue while the economic productivity of each sale declines.";
-    operationalInterpretation += "</p>";
+    const operationalInterpretation =
+      "Operationally this shows how pricing decisions cascade into workload, supplier spend, and delivery capacity. When unit margin shrinks, more orders are required to produce the same profit, which increases operational strain and can reduce pricing power over time.";
 
-    structuralRisk += "<h3>Structural Risk Observation</h3>";
-
-    if (marginChangePercent < 0) {
-      structuralRisk += "<p>";
-      structuralRisk += "The discount applied reduces margin per unit by approximately " + Math.abs(marginChangePercent).toFixed(2) + "% relative to the original structure. If this pattern becomes embedded in pricing behaviour it can gradually compress profitability across the revenue base. Over time management may observe strong top line growth while underlying profit generation weakens.";
-      structuralRisk += "</p>";
+    let riskObservation = "";
+    if (discountedUnitMargin <= 0) {
+      riskObservation =
+        "The structural risk is severe because discounting has removed positive unit economics. This pattern typically leads to cash pressure, reactive cost cutting, and a dependence on continuous volume increases to mask weak margin structure.";
+    } else if (breakEvenVolumeGrowthPct !== null && breakEvenVolumeGrowthPct > volumeGrowthPct + 0.0001) {
+      riskObservation =
+        "The structural risk is that discounting is setting a higher volume threshold to hold profit flat. If demand softens or capacity bottlenecks appear, total profit can fall quickly even if revenue remains stable.";
+    } else if (breakEvenVolumeGrowthPct !== null && breakEvenVolumeGrowthPct <= 0) {
+      riskObservation =
+        "The structure is relatively resilient at these inputs because the post-discount unit margin remains strong enough that small volume changes do not destabilize profit. The main risk shifts to whether discounting becomes habitual and erodes future price discipline.";
     } else {
-      structuralRisk += "<p>";
-      structuralRisk += "The calculation suggests that pricing remains structurally capable of supporting the additional sales volume. Even with the applied discount the margin structure continues to generate sufficient contribution from each unit sold.";
-      structuralRisk += "</p>";
+      riskObservation =
+        "The structural risk is that the business may be training customers to expect concessions, which reduces future pricing room. Over time, supplier cost increases and operating overhead can absorb what appears to be growth on the surface.";
     }
 
-    managementQuestions += "<h3>Management Questions</h3>";
-    managementQuestions += "<p>Which operational drivers are pushing the business toward discounting rather than price stability?</p>";
-    managementQuestions += "<p>If sales growth slowed, would the current discount structure still support healthy margin?</p>";
-    managementQuestions += "<p>How sensitive is overall profit to further discounting required to maintain growth?</p>";
+    const questions = [];
+    questions.push(
+      "What discount levels trigger a break-even volume requirement that exceeds our realistic capacity?"
+    );
+    questions.push(
+      "Which costs are truly variable per unit, and which rise stepwise with higher volume?"
+    );
+    questions.push(
+      "Are we using discounting to compensate for a weak value proposition or slow sales process?"
+    );
 
-    let engagementNote = "";
-    engagementNote += "<p>";
-    engagementNote += "This calculator evaluates only one narrow dimension of business structure. In practice the broader diagnostic work performed by MJB Strategic examines the interaction between profit drivers, cost structure, capital deployment, cash flow timing, revenue concentration, supplier dynamics, and forward operating scenarios. That type of analysis requires structured financial data and careful modelling rather than isolated metrics. Only a limited number of businesses are worked with at any given time because developing a clear operational understanding requires detailed examination of the underlying economics of the company. If the thinking behind this diagnostic resonates with how you view your business you are welcome to explore whether there may be scope to work together. Use the Contact page on the website to request a quote for a deeper structural diagnostic review.";
-    engagementNote += "</p>";
+    let managementQuestionsHtml = "<ul style='margin:10px 0 0 18px'>";
+    for (let i = 0; i < questions.length; i += 1) {
+      managementQuestionsHtml += "<li>" + questions[i] + "</li>";
+    }
+    managementQuestionsHtml += "</ul>";
 
-    resultContainer.innerHTML =
+    let mechanicsBlock = "";
+    mechanicsBlock += "<p><strong>Key Mechanics</strong></p>";
+    mechanicsBlock +=
+      "<p>Baseline unit margin: " +
+      formatMoney(originalUnitMargin) +
+      " per unit at the stated price and cost.</p>";
+    mechanicsBlock +=
+      "<p>Post-discount unit margin: " +
+      formatMoney(discountedUnitMargin) +
+      " per unit after applying the stated discount.</p>";
+    mechanicsBlock +=
+      "<p>Volume factor applied: " +
+      formatPct(volumeGrowthPct) +
+      " change in units sold relative to baseline.</p>";
+    mechanicsBlock +=
+      "<p>Indexed total margin impact: baseline " +
+      formatMoney(baselineTotalMarginIndex) +
+      " versus post-change " +
+      formatMoney(newTotalMarginIndex) +
+      " per baseline unit volume.</p>";
+
+    if (percentChange !== null) {
+      mechanicsBlock +=
+        "<p>Indexed profit change: " +
+        formatMoney(absoluteChange) +
+        " (" +
+        formatPct(percentChange) +
+        ") relative to baseline.</p>";
+    }
+
+    if (breakEvenVolumeGrowthPct !== null && Number.isFinite(breakEvenVolumeGrowthPct)) {
+      mechanicsBlock +=
+        "<p>Break-even volume growth needed to hold profit flat: " +
+        formatPct(breakEvenVolumeGrowthPct) +
+        " at this discount.</p>";
+    } else {
+      mechanicsBlock +=
+        "<p>Break-even volume growth cannot be computed because post-discount unit margin is not positive.</p>";
+    }
+
+    let guardrailHtml = "";
+    if (guardrails.length > 0) {
+      guardrailHtml += "<p><strong>Guardrails</strong></p>";
+      for (let g = 0; g < guardrails.length; g += 1) {
+        guardrailHtml += "<p>" + guardrails[g] + "</p>";
+      }
+    }
+
+    const selectiveEngagement =
+      "This calculator evaluates one narrow dimension of business structure by isolating the interaction between discounting and volume on unit margin and total profit. Broader diagnostic work performed by MJB Strategic tests how profit drivers, cost structure, capital deployment, cash flow timing, revenue concentration, supplier dynamics, and forward operating scenarios interact under realistic operating conditions. That type of analysis requires structured financial data, careful modelling, and detailed operational context to avoid false conclusions. Only a limited number of businesses are worked with at any given time because the work demands direct operational understanding and disciplined analysis. If the thinking behind this diagnostic resonates with how you view your business, use the Contact page to get in touch and request a quote for a deeper structural diagnostic review.";
+
+    const reportHtml =
+      "<p><strong>Diagnostic Summary</strong></p>" +
+      "<p>" +
       diagnosticSummary +
+      "</p>" +
+      mechanicsBlock +
+      "<p><strong>Operational Interpretation</strong></p>" +
+      "<p>" +
       operationalInterpretation +
-      structuralRisk +
-      managementQuestions +
-      engagementNote;
+      "</p>" +
+      "<p><strong>Structural Risk Observation</strong></p>" +
+      "<p>" +
+      riskObservation +
+      "</p>" +
+      guardrailHtml +
+      "<p><strong>Management Questions</strong></p>" +
+      "<p>Use the result to pressure test how growth is being generated and what it costs structurally.</p>" +
+      managementQuestionsHtml +
+      "<p>" +
+      selectiveEngagement +
+      "</p>";
 
+    resultContainer.innerHTML = reportHtml;
   }
 
   calculateButton.addEventListener("click", runDiagnostic);
 
   shareButton.addEventListener("click", function () {
-
     const url = window.location.href;
 
     const shareLink =
@@ -109,7 +220,5 @@ document.addEventListener("DOMContentLoaded", function () {
       encodeURIComponent("Useful diagnostic tool: " + url);
 
     window.open(shareLink, "_blank");
-
   });
-
 });

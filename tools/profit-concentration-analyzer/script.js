@@ -7,26 +7,22 @@ document.addEventListener("DOMContentLoaded", function () {
     resultContainer.innerHTML = "<p style='color:#b91c1c;font-weight:600'>" + message + "</p>";
   }
 
-  function formatCurrency(value) {
-    return value.toLocaleString(undefined, { maximumFractionDigits: 0 });
+  function formatMoney(value) {
+    const rounded = Math.round(value);
+    return rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
-  function formatPercent(value) {
-    return (value * 100).toFixed(1) + "%";
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
   }
 
-  function getTextValue(id) {
-    const el = document.getElementById(id);
-    return (el && el.value ? el.value.trim() : "");
-  }
-
-  function getNumberValue(id) {
+  function readNumber(id) {
     const el = document.getElementById(id);
     if (!el) {
       return null;
     }
-    const raw = (el.value || "").trim();
-    if (!raw) {
+    const raw = String(el.value || "").trim();
+    if (raw === "") {
       return null;
     }
     const num = Number(raw);
@@ -36,286 +32,289 @@ document.addEventListener("DOMContentLoaded", function () {
     return num;
   }
 
-  function buildSegment(index, isRequired) {
-    const name = getTextValue("segment" + index + "Name");
-    const revenue = getNumberValue("segment" + index + "Revenue");
-    const margin = getNumberValue("segment" + index + "Margin");
-
-    const anyProvided = Boolean(name) || revenue !== null || margin !== null;
-
-    if (isRequired) {
-      if (!name) {
-        return { error: "Segment 1 Name is required." };
-      }
-      if (revenue === null || revenue <= 0) {
-        return { error: "Segment 1 Annual Revenue must be greater than zero." };
-      }
-      if (margin === null || margin < 0 || margin > 100) {
-        return { error: "Segment 1 Gross Margin % must be between 0 and 100." };
-      }
-      return {
-        ok: true,
-        name: name,
-        revenue: revenue,
-        margin: margin,
-        profit: revenue * (margin / 100)
-      };
-    }
-
-    if (!anyProvided) {
-      return { ok: false };
-    }
-
-    if (!name) {
-      return { error: "Each optional segment must include a name if used." };
-    }
-    if (revenue === null || revenue <= 0) {
-      return { error: "Each optional segment must include revenue greater than zero if used." };
-    }
-    if (margin === null || margin < 0 || margin > 100) {
-      return { error: "Each optional segment must include a gross margin % between 0 and 100 if used." };
-    }
-
-    return {
-      ok: true,
-      name: name,
-      revenue: revenue,
-      margin: margin,
-      profit: revenue * (margin / 100)
-    };
-  }
-
   function runDiagnostic() {
     resultContainer.innerHTML = "";
 
     const segments = [];
-    const first = buildSegment(1, true);
-    if (first.error) {
-      showError(first.error);
-      return;
-    }
-    segments.push(first);
+    const issues = [];
 
-    for (let i = 2; i <= 6; i += 1) {
-      const seg = buildSegment(i, false);
-      if (seg.error) {
-        showError(seg.error);
-        return;
+    for (let i = 1; i <= 6; i++) {
+      const revenue = readNumber("segment" + i + "Revenue");
+      const margin = readNumber("segment" + i + "Margin");
+
+      const revenueProvided = revenue !== null;
+      const marginProvided = margin !== null;
+
+      if (i === 1) {
+        if (!revenueProvided || !marginProvided) {
+          showError("Segment 1 requires both annual revenue and gross margin percentage.");
+          return;
+        }
       }
-      if (seg.ok) {
-        segments.push(seg);
+
+      if (revenueProvided !== marginProvided) {
+        issues.push("Segment " + i + " must include both revenue and margin, or be left blank.");
+        continue;
       }
+
+      if (!revenueProvided && !marginProvided) {
+        continue;
+      }
+
+      if (revenue <= 0) {
+        issues.push("Segment " + i + " revenue must be greater than zero.");
+        continue;
+      }
+
+      if (margin < 0 || margin > 100) {
+        issues.push("Segment " + i + " margin must be between 0 and 100.");
+        continue;
+      }
+
+      const marginRate = margin / 100;
+      const profit = revenue * marginRate;
+
+      segments.push({
+        index: i,
+        revenue: revenue,
+        margin: margin,
+        profit: profit
+      });
+    }
+
+    if (issues.length > 0) {
+      showError(issues[0]);
+      return;
     }
 
     const completedCount = segments.length;
 
-    let totalProfit = 0;
-    for (let i = 0; i < segments.length; i += 1) {
-      totalProfit += segments[i].profit;
-    }
-
-    if (!Number.isFinite(totalProfit) || totalProfit <= 0) {
-      showError("Total estimated profit must be greater than zero to evaluate concentration.");
+    if (completedCount < 1) {
+      showError("Enter at least one complete segment to run the diagnostic.");
       return;
     }
 
-    segments.sort(function (a, b) {
+    let totalProfit = 0;
+    let totalRevenue = 0;
+
+    for (let i = 0; i < segments.length; i++) {
+      totalProfit += segments[i].profit;
+      totalRevenue += segments[i].revenue;
+    }
+
+    if (!Number.isFinite(totalProfit) || totalProfit <= 0) {
+      showError("Total estimated gross profit must be greater than zero to interpret concentration.");
+      return;
+    }
+
+    const sortedByProfit = segments.slice().sort(function (a, b) {
       return b.profit - a.profit;
     });
 
-    const top1 = segments[0];
-    const top1Share = top1.profit / totalProfit;
+    const top = sortedByProfit[0];
+    const topShare = top.profit / totalProfit;
 
-    let top2Share = null;
-    let top2CombinedProfit = null;
-    let second = null;
-
+    let topTwoProfit = top.profit;
     if (completedCount >= 2) {
-      second = segments[1];
-      top2CombinedProfit = top1.profit + second.profit;
-      top2Share = top2CombinedProfit / totalProfit;
+      topTwoProfit += sortedByProfit[1].profit;
+    }
+    const topTwoShare = topTwoProfit / totalProfit;
+
+    let concentrationLabel = "moderate";
+    if (completedCount === 1) {
+      concentrationLabel = "absolute";
+    } else if (topShare >= 0.65 || topTwoShare >= 0.85) {
+      concentrationLabel = "high";
+    } else if (topShare >= 0.45 || topTwoShare >= 0.70) {
+      concentrationLabel = "moderate";
+    } else {
+      concentrationLabel = "low";
     }
 
-    let summaryLine = "";
+    const topProfitMoney = formatMoney(top.profit);
+    const totalProfitMoney = formatMoney(totalProfit);
+
+    const topSharePct = Math.round(clamp(topShare * 100, 0, 100));
+    const topTwoSharePct = Math.round(clamp(topTwoShare * 100, 0, 100));
+
+    let summary = "";
     if (completedCount === 1) {
-      summaryLine =
-        "Only one segment is included, so 100% of estimated profit is attributed to " + top1.name + ".";
+      summary =
+        "Based on the single segment entered, 100% of estimated gross profit is produced by Segment " +
+        top.index +
+        ". This is not a diversification result, it is simply the structure you provided.";
     } else if (completedCount === 2) {
-      summaryLine =
-        top1.name +
-        " contributes " +
-        formatPercent(top1Share) +
-        " of total estimated profit. Both segments together account for 100% by definition.";
+      summary =
+        "Estimated gross profit is concentrated, with Segment " +
+        top.index +
+        " producing " +
+        topSharePct +
+        "% of total profit. Both segments together produce " +
+        topTwoSharePct +
+        "% of total profit.";
     } else {
-      summaryLine =
-        top1.name +
-        " contributes " +
-        formatPercent(top1Share) +
-        " of total estimated profit, and the top two segments combined contribute " +
-        formatPercent(top2Share) +
-        ".";
+      summary =
+        "Estimated gross profit concentration shows Segment " +
+        top.index +
+        " produces " +
+        topSharePct +
+        "% of total profit. The top two segments together produce " +
+        topTwoSharePct +
+        "% of total profit.";
     }
 
     let interpretation = "";
     if (completedCount === 1) {
       interpretation =
-        "With a single profit engine, management attention, pricing discipline, and delivery quality are all concentrated on one activity. This can be efficient, but it also means there is no internal offset if margin weakens or volume falls in that activity.";
-    } else if (completedCount === 2) {
+        "Operationally, this means your profit engine is defined by one activity in the data entered. Any pricing pressure, cost shift, or volume decline in that activity will flow straight through to the business because there is no second profit source in the model.";
+    } else if (concentrationLabel === "high") {
+      if (completedCount === 2) {
+        interpretation =
+          "This structure usually means management attention, pricing decisions, and commercial energy should be anchored to the segments that actually generate profit. It also means supplier costs and discounting in the dominant segment can move total profit far more than changes elsewhere.";
+      } else {
+        interpretation =
+          "This structure usually means management attention, pricing decisions, and commercial energy should be anchored to the segments that actually generate profit. It also means supplier costs, discounting, or operational disruption in the leading segments can move total profit far more than changes elsewhere.";
+      }
+    } else if (concentrationLabel === "low") {
       interpretation =
-        "When profit is split across two segments, operational focus is often pulled between two different pricing logics, delivery constraints, and customer expectations. The higher profit segment usually sets the pace for cash generation and management attention.";
+        "This structure suggests profit is more broadly distributed across the activities entered. In practice that often creates resilience because weakness in one area is less likely to collapse the total profit base, and it gives management more degrees of freedom when reallocating resources.";
     } else {
       interpretation =
-        "When one or two segments generate a large share of profit, the business tends to optimise around those activities, often shaping pricing power, supplier leverage, and where management time is spent. A broader spread usually supports steadier decision making because performance is not hostage to one segment’s margin.";
+        "This structure sits between resilience and dependency. Profit is not fully concentrated, but a limited set of segments still carry a disproportionate share, which means operators should understand which operational levers protect those margins and which decisions erode them.";
     }
-
-    const highConcentrationThreshold = 0.6;
-    const moderateConcentrationThreshold = 0.4;
 
     let risk = "";
-    let concentrationLabel = "";
-
     if (completedCount === 1) {
-      concentrationLabel = "fully concentrated";
       risk =
-        "The structural risk is dependency. If the margin in " +
-        top1.name +
-        " compresses due to input cost increases or discounting pressure, total profit declines immediately with no internal buffer.";
-    } else if (completedCount === 2) {
-      if (top1Share >= highConcentrationThreshold) {
-        concentrationLabel = "highly concentrated";
+        "The main structural risk is single-point dependency. If Segment " +
+        top.index +
+        " weakens, there is no secondary profit engine in the entered structure to stabilise the business, which can force reactive pricing, rushed cost cuts, or deferred maintenance and investment.";
+    } else if (concentrationLabel === "high") {
+      if (completedCount === 2) {
         risk =
-          "The structural risk is that " +
-          top1.name +
-          " is carrying most of the profit burden. If that segment weakens, the remaining segment is unlikely to absorb the shock without pricing changes or cost reductions.";
-      } else if (top1Share >= moderateConcentrationThreshold) {
-        concentrationLabel = "moderately concentrated";
-        risk =
-          "The structure suggests a clear lead segment, but not a single point of failure. Risk still exists if " +
-          top1.name +
-          " has volatile pricing, supplier exposure, or delivery capacity constraints.";
+          "High profit concentration increases exposure to disruption in the segment that funds the business. If pricing power deteriorates, a key customer reduces orders, or direct costs rise, the impact is amplified because there are limited alternative profit sources in the entered structure.";
       } else {
-        concentrationLabel = "broadly distributed";
         risk =
-          "The structure appears more resilient because profit is not dominated by one segment. The main risk shifts to execution: maintaining consistent margin discipline across multiple segments without hidden cross-subsidies.";
+          "High profit concentration increases exposure to disruption in the segments that fund the business. If pricing power deteriorates, a key customer group shifts, or direct costs rise in those areas, the impact is amplified because the remaining segments do not carry enough profit weight to stabilise outcomes.";
       }
+    } else if (concentrationLabel === "low") {
+      risk =
+        "Lower concentration reduces dependency risk, but it can hide operational inefficiency if management does not know which segments deserve investment. The risk shifts from dependency to dilution, where capacity and attention are spread too evenly and the best profit drivers are not protected.";
     } else {
-      if (top2Share >= 0.75 || top1Share >= highConcentrationThreshold) {
-        concentrationLabel = "highly concentrated";
-        risk =
-          "High concentration increases vulnerability to disruption. If the leading segment weakens, the profit base can drop faster than revenue, forcing reactive pricing decisions, rushed cost cuts, or deferred investment.";
-      } else if (top2Share >= 0.55 || top1Share >= moderateConcentrationThreshold) {
-        concentrationLabel = "moderately concentrated";
-        risk =
-          "Moderate concentration can be healthy if the leading segments are well defended, but it still creates exposure to supplier pricing moves, customer churn, or capacity constraints in the segments doing most of the profit work.";
-      } else {
-        concentrationLabel = "broadly distributed";
-        risk =
-          "Lower concentration generally improves resilience because multiple segments contribute meaningful profit. The trade-off is that management must maintain discipline across a wider set of pricing and delivery decisions.";
-      }
+      risk =
+        "Moderate concentration creates mixed risk. The business has more than one profit source, but profit is still sensitive to performance in a limited number of segments, so margin leakage or cost creep in those areas can quietly erode total results.";
     }
 
-    let questions = [];
+    const questionItems = [];
     if (completedCount === 1) {
-      questions = [
-        "Which operational drivers most directly move gross margin in " + top1.name + "?",
-        "If gross margin fell by five points, what cost or pricing actions are available?",
-        "What early-warning signals would show this segment is weakening?"
-      ];
-    } else if (completedCount === 2) {
-      questions = [
-        "What protects the gross margin of " + top1.name + " from discounting or cost pressure?",
-        "Are overhead and management attention aligned with where profit is actually generated?",
-        "If " + top1.name + " weakened, which actions would stabilise profit fastest?"
-      ];
+      questionItems.push(
+        "What specific pricing and direct cost drivers determine Segment " + top.index + " gross margin?"
+      );
+      questionItems.push(
+        "If Segment " + top.index + " profit dropped by 20%, what costs or commitments become unaffordable?"
+      );
+      questionItems.push(
+        "Which new segment could be built to create a second profit engine over time?"
+      );
+    } else if (concentrationLabel === "high") {
+      if (completedCount === 2) {
+        questionItems.push(
+          "Which operational drivers most strongly influence profit in Segment " + top.index + "?"
+        );
+        questionItems.push(
+          "Are discounting, rebates, or supplier price increases eroding the dominant segment margin?"
+        );
+        questionItems.push(
+          "What would the business do if the leading segment weakened for two quarters?"
+        );
+      } else {
+        questionItems.push(
+          "Which operational drivers most strongly influence profit in the top segment and the next strongest segment?"
+        );
+        questionItems.push(
+          "Are management time, service levels, and inventory aligned to protect those profit contributors?"
+        );
+        questionItems.push(
+          "If the leading segments weakened, which remaining segments could realistically absorb capacity and sustain profit?"
+        );
+      }
+    } else if (concentrationLabel === "low") {
+      questionItems.push(
+        "Which segments have the highest margins relative to their operational effort?"
+      );
+      questionItems.push(
+        "Are there segments that generate revenue but consume capacity with weak profit contribution?"
+      );
+      questionItems.push(
+        "Where should capital and management focus be increased based on profit contribution?"
+      );
     } else {
-      questions = [
-        "Are the segments generating most profit also receiving the most management attention?",
-        "Which supplier or input costs most threaten gross margin in the top profit segments?",
-        "If the top segment weakened, which other segments could realistically carry more profit?"
-      ];
+      questionItems.push(
+        "Which segments are most sensitive to small changes in margin percentage?"
+      );
+      questionItems.push(
+        "Are any segments being prioritised operationally despite weak profit contribution?"
+      );
+      questionItems.push(
+        "What decisions would materially increase profit share in the strongest segments without damaging cash flow?"
+      );
     }
 
-    let segmentTableRows = "";
-    for (let i = 0; i < segments.length; i += 1) {
-      const s = segments[i];
+    const segmentLines = [];
+    for (let i = 0; i < sortedByProfit.length; i++) {
+      const s = sortedByProfit[i];
       const share = s.profit / totalProfit;
-      segmentTableRows +=
-        "<tr>" +
-        "<td style='padding:8px 10px;border-bottom:1px solid #e5e7eb'>" +
-        s.name +
-        "</td>" +
-        "<td style='padding:8px 10px;border-bottom:1px solid #e5e7eb;text-align:right'>" +
-        formatCurrency(s.revenue) +
-        "</td>" +
-        "<td style='padding:8px 10px;border-bottom:1px solid #e5e7eb;text-align:right'>" +
-        s.margin.toFixed(1) +
-        "%</td>" +
-        "<td style='padding:8px 10px;border-bottom:1px solid #e5e7eb;text-align:right'>" +
-        formatCurrency(s.profit) +
-        "</td>" +
-        "<td style='padding:8px 10px;border-bottom:1px solid #e5e7eb;text-align:right'>" +
-        formatPercent(share) +
-        "</td>" +
-        "</tr>";
+      const sharePct = Math.round(clamp(share * 100, 0, 100));
+      segmentLines.push(
+        "<li>Segment " +
+          s.index +
+          ": estimated gross profit " +
+          formatMoney(s.profit) +
+          " (" +
+          sharePct +
+          "% of total)</li>"
+      );
     }
 
-    let concentrationSentence = "";
-    if (completedCount === 1) {
-      concentrationSentence =
-        "Based on the segments provided, the profit structure is " + concentrationLabel + ".";
-    } else if (completedCount === 2) {
-      concentrationSentence =
-        "Based on the segments provided, the profit structure is " + concentrationLabel + " around the leading segment.";
-    } else {
-      concentrationSentence =
-        "Based on the segments provided, the profit structure is " + concentrationLabel + " across the segment set.";
-    }
+    const topDetailLine =
+      "Segment " +
+      top.index +
+      " estimated gross profit is " +
+      topProfitMoney +
+      " out of total " +
+      totalProfitMoney +
+      ".";
 
-    const reportHtml =
-      "<div style='margin-top:14px'>" +
-      "<h3 style='margin:0 0 8px 0'>Diagnostic Summary</h3>" +
-      "<p style='margin:0 0 10px 0'>" +
-      summaryLine +
-      "</p>" +
-      "<p style='margin:0 0 10px 0'>" +
-      concentrationSentence +
-      "</p>" +
-      "<div style='overflow-x:auto;margin:10px 0 14px 0'>" +
-      "<table style='width:100%;border-collapse:collapse;min-width:620px'>" +
-      "<thead>" +
-      "<tr>" +
-      "<th style='text-align:left;padding:8px 10px;border-bottom:1px solid #e5e7eb'>Segment</th>" +
-      "<th style='text-align:right;padding:8px 10px;border-bottom:1px solid #e5e7eb'>Revenue</th>" +
-      "<th style='text-align:right;padding:8px 10px;border-bottom:1px solid #e5e7eb'>Gross Margin</th>" +
-      "<th style='text-align:right;padding:8px 10px;border-bottom:1px solid #e5e7eb'>Estimated Profit</th>" +
-      "<th style='text-align:right;padding:8px 10px;border-bottom:1px solid #e5e7eb'>Profit Share</th>" +
-      "</tr>" +
-      "</thead>" +
-      "<tbody>" +
-      segmentTableRows +
-      "</tbody>" +
-      "</table>" +
-      "</div>" +
-      "<h3 style='margin:0 0 8px 0'>Operational Interpretation</h3>" +
-      "<p style='margin:0 0 12px 0'>" +
-      interpretation +
-      "</p>" +
-      "<h3 style='margin:0 0 8px 0'>Structural Risk Observation</h3>" +
-      "<p style='margin:0 0 12px 0'>" +
-      risk +
-      "</p>" +
-      "<h3 style='margin:0 0 8px 0'>Management Questions</h3>" +
-      "<ul style='margin:0 0 14px 18px'>" +
-      "<li style='margin:6px 0'>" + questions[0] + "</li>" +
-      "<li style='margin:6px 0'>" + questions[1] + "</li>" +
-      "<li style='margin:6px 0'>" + questions[2] + "</li>" +
-      "</ul>" +
-      "<p style='margin:0'>" +
-      "This calculator evaluates only one narrow dimension of business structure: how gross profit is distributed across revenue segments. The broader diagnostic work performed by MJB Strategic examines the interaction between profit drivers, cost structure, capital deployment, cash flow timing, revenue concentration, supplier dynamics, and forward operating scenarios. That work requires structured financial data and careful modelling. Only a limited number of businesses are worked with at any given time because the analysis requires detailed operational understanding. If the thinking behind this diagnostic matches how you view your business, use the Contact page to get in touch and request a quote for a deeper structural diagnostic review." +
-      "</p>" +
-      "</div>";
+    const questionsHtml =
+      "<ul>" +
+      "<li>" + questionItems[0] + "</li>" +
+      "<li>" + questionItems[1] + "</li>" +
+      "<li>" + questionItems[2] + "</li>" +
+      "</ul>";
 
-    resultContainer.innerHTML = reportHtml;
+    const segmentBreakdownHtml = "<ul>" + segmentLines.join("") + "</ul>";
+
+    let selectiveEngagement = "";
+    selectiveEngagement =
+      "This calculator tests only one narrow dimension of business structure: how gross profit is distributed across revenue segments. Broader diagnostic work performed by MJB Strategic examines how profit drivers interact with cost structure, capital deployment, cash flow timing, revenue concentration, supplier dynamics, and forward operating scenarios. That work requires structured financial data, careful modelling, and an accurate operational understanding of what drives margin and cash inside the business. Only a limited number of businesses are worked with at any given time because the analysis is detailed and execution-oriented. If the thinking behind this diagnostic matches how you view your business, you can explore whether there may be scope to work together by using the Contact page to request a quote for a deeper structural diagnostic review.";
+
+    let html = "";
+    html += "<div style='max-width:920px;margin:18px auto 0 auto'>";
+    html += "<p><strong>Diagnostic Summary</strong></p>";
+    html += "<p>" + summary + "</p>";
+    html += "<p>" + topDetailLine + "</p>";
+    html += "<p><strong>Operational Interpretation</strong></p>";
+    html += "<p>" + interpretation + "</p>";
+    html += "<p><strong>Structural Risk Observation</strong></p>";
+    html += "<p>" + risk + "</p>";
+    html += "<p><strong>Profit Contribution Breakdown</strong></p>";
+    html += segmentBreakdownHtml;
+    html += "<p><strong>Management Questions</strong></p>";
+    html += questionsHtml;
+    html += "<p>" + selectiveEngagement + "</p>";
+    html += "</div>";
+
+    resultContainer.innerHTML = html;
   }
 
   calculateButton.addEventListener("click", runDiagnostic);
