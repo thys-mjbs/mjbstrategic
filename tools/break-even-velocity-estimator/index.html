@@ -41,62 +41,119 @@
   <main class="site-main tool-page">
     <div style="max-width:720px;margin:0 auto">
       <h1>Break-Even Velocity Estimator</h1>
-      <p>A business adds fixed costs when it hires, expands, or commits to new capacity. This diagnostic measures the revenue growth required to keep the cost base economically justified.</p>
-      <p>In real operations, new fixed costs usually arrive before the extra orders are stable. The gap shows up as compressed cash generation, weaker coverage, and pressure to discount.</p>
-      <p>This matters because expansion should be paced to the rate the business can actually convert demand into margin. If revenue velocity is unrealistic, the decision becomes a liquidity and execution risk.</p>
+      <p>This diagnostic measures the revenue velocity required to justify an increase in fixed costs. It estimates the break-even revenue level implied by your margin and fixed cost base.</p>
+      <p>In operating businesses this problem appears when headcount, premises, software, or leadership hires are added ahead of demand. The cost base moves immediately, while orders, invoicing, and cash collection often lag.</p>
+      <p>The output matters because expansion decisions are usually made under time pressure with partial visibility. A clear break-even path forces disciplined pricing, capacity planning, and cost structure control before committing.</p>
     </div>
   
     <section class="tool-section">
       <div class="tool-input-grid">
         <div class="tool-field">
           <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-            <label for="currentRevenue">Current monthly revenue</label>
-            <input id="currentRevenue" type="number" min="0" step="any" style="width:160px" />
+            <label for="currentMonthlyRevenue">Current monthly revenue</label>
+            <input id="currentMonthlyRevenue" type="number" inputmode="numeric" placeholder="e.g., 2500000" style="width:160px" />
           </div>
           <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-            Use average monthly revenue from recent trading periods.
-          </p>
-        </div>
-  
-        <div class="tool-field">
-          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-            <label for="currentFixedCosts">Current fixed costs</label>
-            <input id="currentFixedCosts" type="number" min="0" step="any" style="width:160px" />
-          </div>
-          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-            Include rent, salaries, software, and other fixed overheads.
-          </p>
-        </div>
-  
-        <div class="tool-field">
-          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-            <label for="newFixedCosts">Expected new fixed costs</label>
-            <input id="newFixedCosts" type="number" min="0" step="any" style="width:160px" />
-          </div>
-          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-            Enter incremental monthly costs from the planned expansion.
+            Use trailing 30-day invoiced revenue, not pipeline.
           </p>
         </div>
   
         <div class="tool-field">
           <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
             <label for="grossMarginPercent">Average gross margin percent</label>
-            <input id="grossMarginPercent" type="number" min="0" max="100" step="any" style="width:160px" />
+            <input id="grossMarginPercent" type="number" inputmode="numeric" placeholder="e.g., 32" style="width:160px" />
           </div>
           <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
-            Use gross margin after direct costs, before overhead.
+            Gross profit as a percent of revenue before overhead.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="currentFixedCosts">Current monthly fixed costs</label>
+            <input id="currentFixedCosts" type="number" inputmode="numeric" placeholder="e.g., 950000" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Include salaries, rent, software, and other fixed overhead.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="newFixedCosts">Expected new monthly fixed costs</label>
+            <input id="newFixedCosts" type="number" inputmode="numeric" placeholder="e.g., 220000" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            The recurring monthly increase from hires or expansion.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="currentMonthlyGrowthPercent">Current monthly revenue growth percent</label>
+            <input id="currentMonthlyGrowthPercent" type="number" inputmode="numeric" placeholder="e.g., 6" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Use recent average monthly growth from actual invoicing.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="targetMonths">Target months to reach break-even</label>
+            <input id="targetMonths" type="number" inputmode="numeric" placeholder="e.g., 6" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            How long you will tolerate the higher cost base.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="expectedMarginChangePercent">Expected gross margin change (optional)</label>
+            <input id="expectedMarginChangePercent" type="number" inputmode="numeric" placeholder="e.g., -2" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Enter percentage points, positive or negative.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="expectedGrowthChangePercent">Expected growth change (optional)</label>
+            <input id="expectedGrowthChangePercent" type="number" inputmode="numeric" placeholder="e.g., 3" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Enter percentage points applied to monthly growth.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="fixedCostOverrunPercent">Fixed cost overrun allowance (optional)</label>
+            <input id="fixedCostOverrunPercent" type="number" inputmode="numeric" placeholder="e.g., 10" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Adds a contingency percent to the combined fixed cost base.
+          </p>
+        </div>
+  
+        <div class="tool-field">
+          <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <label for="rampDelayMonths">Ramp delay before growth (optional)</label>
+            <input id="rampDelayMonths" type="number" inputmode="numeric" placeholder="e.g., 2" style="width:160px" />
+          </div>
+          <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">
+            Months before growth benefits appear after the change.
           </p>
         </div>
       </div>
     </section>
   
-    <p style="margin:18px 0 0 0">
-      This tool assumes you have basic internal visibility into monthly revenue, gross margin, fixed costs, and order throughput. If these numbers are not tracked consistently, the real risk is often not the calculation but the lack of operational reporting discipline required to manage expansion.
-    </p>
+    <p>Many of the inputs requested by this diagnostic are metrics that disciplined operators typically monitor through internal management reporting. If a number requested here is not immediately available it often indicates that the current reporting structure does not isolate that metric clearly. Businesses operating with strong financial visibility normally track these figures regularly because they influence pricing decisions, supplier negotiations, operational planning, capital allocation, and risk management. Part of the work performed by MJB Strategic often involves helping companies design internal reporting structures that surface these metrics consistently so management can make better operational decisions.</p>
   
     <div class="tool-buttons">
-      <button class="tool-button" id="calculateButton">Run diagnostic</button>
-      <button class="tool-button" id="shareWhatsAppButton">Share this tool on WhatsApp</button>
+      <button id="calculateButton">Run diagnostic</button> <button id="shareWhatsAppButton">Share this tool on WhatsApp</button>
     </div>
   
     <div id="result"></div>

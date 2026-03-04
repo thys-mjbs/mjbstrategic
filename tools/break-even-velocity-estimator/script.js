@@ -10,185 +10,217 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function formatNumber(value) {
-    return Math.round(value).toLocaleString();
+    const rounded = Math.round(value);
+    return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
   function runDiagnostic() {
 
-    const currentRevenue = Number(document.getElementById("currentRevenue").value);
+    resultContainer.innerHTML = "";
+
+    /* INPUT COLLECTION */
+
+    const currentMonthlyRevenue = Number(document.getElementById("currentMonthlyRevenue").value);
+    const grossMarginPercent = Number(document.getElementById("grossMarginPercent").value);
     const currentFixedCosts = Number(document.getElementById("currentFixedCosts").value);
     const newFixedCosts = Number(document.getElementById("newFixedCosts").value);
-    const grossMarginPercent = Number(document.getElementById("grossMarginPercent").value);
+    const currentMonthlyGrowthPercent = Number(document.getElementById("currentMonthlyGrowthPercent").value);
+    const targetMonths = Number(document.getElementById("targetMonths").value);
+
+    const expectedMarginChangePercent = Number(document.getElementById("expectedMarginChangePercent").value);
+    const expectedGrowthChangePercent = Number(document.getElementById("expectedGrowthChangePercent").value);
+    const fixedCostOverrunPercent = Number(document.getElementById("fixedCostOverrunPercent").value);
+    const rampDelayMonths = Number(document.getElementById("rampDelayMonths").value);
+
+    const marginChangeInput = Number.isFinite(expectedMarginChangePercent) ? expectedMarginChangePercent : 0;
+    const growthChangeInput = Number.isFinite(expectedGrowthChangePercent) ? expectedGrowthChangePercent : 0;
+    const fixedOverrunInput = Number.isFinite(fixedCostOverrunPercent) ? fixedCostOverrunPercent : 0;
+    const rampDelayInput = Number.isFinite(rampDelayMonths) ? rampDelayMonths : 0;
+
+    const completedCount = 1;
+
+    /* VALIDATION */
 
     if (
-      !isFinite(currentRevenue) ||
-      !isFinite(currentFixedCosts) ||
-      !isFinite(newFixedCosts) ||
-      !isFinite(grossMarginPercent)
+      !Number.isFinite(currentMonthlyRevenue) ||
+      !Number.isFinite(grossMarginPercent) ||
+      !Number.isFinite(currentFixedCosts) ||
+      !Number.isFinite(newFixedCosts) ||
+      !Number.isFinite(currentMonthlyGrowthPercent) ||
+      !Number.isFinite(targetMonths)
     ) {
       showError("Enter valid numeric values in all required fields.");
       return;
     }
 
     if (
-      currentRevenue < 0 ||
+      currentMonthlyRevenue <= 0 ||
+      grossMarginPercent <= 0 ||
       currentFixedCosts < 0 ||
-      newFixedCosts < 0
+      newFixedCosts < 0 ||
+      targetMonths <= 0
     ) {
-      showError("Values cannot be negative.");
+      showError("Enter valid positive values in all required fields.");
       return;
     }
 
-    if (grossMarginPercent <= 0 || grossMarginPercent > 100) {
-      showError("Enter a gross margin percent between 1 and 100.");
+    if (grossMarginPercent > 100) {
+      showError("Gross margin percent must be between 0 and 100.");
       return;
     }
 
-    const grossMarginDecimal = grossMarginPercent / 100;
+    if (currentMonthlyGrowthPercent < -100 || currentMonthlyGrowthPercent > 200) {
+      showError("Monthly revenue growth percent must be between -100 and 200.");
+      return;
+    }
 
-    const currentGrossProfit = currentRevenue * grossMarginDecimal;
-    const currentOperatingProfit = currentGrossProfit - currentFixedCosts;
-
-    const newTotalFixedCosts = currentFixedCosts + newFixedCosts;
-
-    const breakEvenRevenueRequired = newTotalFixedCosts / grossMarginDecimal;
-
-    const additionalRevenueRequired = breakEvenRevenueRequired - currentRevenue;
-
-    const additionalGrossProfitRequired = newFixedCosts;
-
-    const revenueGrowthRequiredDecimal = additionalRevenueRequired / currentRevenue;
-    const revenueGrowthRequiredPercent = Math.round(revenueGrowthRequiredDecimal * 100);
-
-    const requiredMonthlyRevenueLift = additionalRevenueRequired;
-
-    const assumedMonthlyGrowthDecimal = 0.05;
-
-    let monthsToBreakEven = 0;
-    let projectedRevenue = currentRevenue;
-
-    if (additionalRevenueRequired <= 0) {
-      monthsToBreakEven = 0;
-    } else {
-      while (projectedRevenue < breakEvenRevenueRequired && monthsToBreakEven < 60) {
-        projectedRevenue = projectedRevenue * (1 + assumedMonthlyGrowthDecimal);
-        monthsToBreakEven = monthsToBreakEven + 1;
+    if (Number.isFinite(marginChangeInput)) {
+      if (marginChangeInput < -50 || marginChangeInput > 50) {
+        showError("Expected gross margin change must be between -50 and 50.");
+        return;
       }
     }
 
-    const currentRevenueRounded = formatNumber(currentRevenue);
-    const currentFixedCostsRounded = formatNumber(currentFixedCosts);
-    const newFixedCostsRounded = formatNumber(newFixedCosts);
-    const newTotalFixedCostsRounded = formatNumber(newTotalFixedCosts);
-
-    const breakEvenRevenueRequiredRounded = formatNumber(breakEvenRevenueRequired);
-    const additionalRevenueRequiredRounded = formatNumber(additionalRevenueRequired);
-    const requiredMonthlyRevenueLiftRounded = formatNumber(requiredMonthlyRevenueLift);
-
-    const currentGrossProfitRounded = formatNumber(currentGrossProfit);
-    const currentOperatingProfitRounded = formatNumber(currentOperatingProfit);
-
-    const additionalGrossProfitRequiredRounded = formatNumber(additionalGrossProfitRequired);
-
-    let breakEvenTimingLine = "";
-    let breakEvenTimingRisk = "";
-
-    if (additionalRevenueRequired <= 0) {
-      breakEvenTimingLine =
-        "The planned fixed cost increase is already covered by current revenue throughput at the stated margin.";
-      breakEvenTimingRisk =
-        "This indicates the current structure has unused coverage capacity, but cash timing and execution still matter.";
-    } else if (monthsToBreakEven === 0) {
-      breakEvenTimingLine =
-        "At the stated margin, the revenue required to support the new cost base is already met.";
-      breakEvenTimingRisk =
-        "This suggests the expansion is not structurally aggressive, but the operational plan still needs discipline.";
-    } else if (monthsToBreakEven >= 60) {
-      breakEvenTimingLine =
-        "Under a modest growth assumption, the revenue required to support the new cost base may not be reached within five years.";
-      breakEvenTimingRisk =
-        "This is typically a signal that the expansion is structurally misaligned to realistic demand conversion capacity.";
-    } else if (monthsToBreakEven <= 6) {
-      breakEvenTimingLine =
-        "Under a modest growth assumption, the new cost base could be supported within " + monthsToBreakEven + " months.";
-      breakEvenTimingRisk =
-        "This is still a short runway, which means execution slippage or discounting can quickly create pressure.";
-    } else if (monthsToBreakEven <= 18) {
-      breakEvenTimingLine =
-        "Under a modest growth assumption, break-even on the new cost base could take about " + monthsToBreakEven + " months.";
-      breakEvenTimingRisk =
-        "This requires steady demand conversion and stable pricing discipline across the ramp period.";
-    } else {
-      breakEvenTimingLine =
-        "Under a modest growth assumption, break-even on the new cost base could take around " + monthsToBreakEven + " months.";
-      breakEvenTimingRisk =
-        "A longer ramp increases the risk of margin compression, cash strain, and management distraction.";
+    if (Number.isFinite(growthChangeInput)) {
+      if (growthChangeInput < -100 || growthChangeInput > 200) {
+        showError("Expected growth change must be between -100 and 200.");
+        return;
+      }
     }
 
-    let structuralRiskObservation = "";
-    let operationalInterpretation = "";
-    let keyMechanics = "";
-
-    if (additionalRevenueRequired <= 0) {
-      keyMechanics =
-        "Your current gross profit coverage appears sufficient to absorb the planned fixed cost increase without needing additional revenue.";
-      operationalInterpretation =
-        "Operationally, this usually means existing capacity, order throughput, or pricing power is already carrying more overhead than currently required.";
-      structuralRiskObservation =
-        "The risk shifts from break-even math to execution risk, such as adding cost without improving output discipline or cash conversion timing.";
-    } else if (revenueGrowthRequiredPercent <= 10) {
-      keyMechanics =
-        "The expansion requires a relatively small lift in monthly revenue to support the new fixed costs at the stated margin.";
-      operationalInterpretation =
-        "In practice, this often maps to modest improvements in order volume, utilisation, or upsell performance without major changes to pricing.";
-      structuralRiskObservation =
-        "Even small fixed cost additions can create cash strain if collections slow, discounts increase, or demand is uneven across months.";
-    } else if (revenueGrowthRequiredPercent <= 35) {
-      keyMechanics =
-        "The expansion requires a meaningful revenue step-up to keep the fixed cost base covered at the stated margin.";
-      operationalInterpretation =
-        "This typically requires active pipeline management, capacity scheduling, and protecting pricing so the margin engine stays intact.";
-      structuralRiskObservation =
-        "If revenue growth is achieved through discounting or lower-quality orders, the gross margin assumption can fail and the break-even moves further out.";
-    } else {
-      keyMechanics =
-        "The expansion requires a large increase in revenue to support the new fixed cost base at the stated margin.";
-      operationalInterpretation =
-        "Operationally, this usually means the business must secure new demand channels, add capacity utilisation quickly, and avoid pricing erosion during the ramp.";
-      structuralRiskObservation =
-        "High required revenue velocity increases the probability of cash pressure, rushed hiring, margin dilution, and reactive cost cutting later.";
+    if (Number.isFinite(fixedOverrunInput)) {
+      if (fixedOverrunInput < 0 || fixedOverrunInput > 100) {
+        showError("Fixed cost overrun allowance must be between 0 and 100.");
+        return;
+      }
     }
+
+    if (Number.isFinite(rampDelayInput)) {
+      if (rampDelayInput < 0 || rampDelayInput > 24) {
+        showError("Ramp delay must be between 0 and 24 months.");
+        return;
+      }
+    }
+
+    /* BASELINE CALCULATION */
+
+    const baselineMarginDecimal = grossMarginPercent / 100;
+    const baselineMonthlyGrossProfit = currentMonthlyRevenue * baselineMarginDecimal;
+    const baselineMonthlySurplus = baselineMonthlyGrossProfit - currentFixedCosts;
+
+    const baselineBreakEvenRevenue = currentFixedCosts / baselineMarginDecimal;
+    const baselineBreakEvenGap = baselineBreakEvenRevenue - currentMonthlyRevenue;
+
+    /* SCENARIO CALCULATION */
+
+    const scenarioFixedCostsBase = currentFixedCosts + newFixedCosts;
+    const scenarioFixedCosts = scenarioFixedCostsBase * (1 + fixedOverrunInput / 100);
+
+    const scenarioGrossMarginPercent = grossMarginPercent + marginChangeInput;
+    if (scenarioGrossMarginPercent <= 0 || scenarioGrossMarginPercent > 100) {
+      showError("Scenario gross margin percent must be between 1 and 100.");
+      return;
+    }
+
+    const scenarioMarginDecimal = scenarioGrossMarginPercent / 100;
+
+    const scenarioBreakEvenRevenue = scenarioFixedCosts / scenarioMarginDecimal;
+    const additionalRevenueRequired = scenarioBreakEvenRevenue - currentMonthlyRevenue;
+
+    const percentIncreaseDecimal = additionalRevenueRequired / currentMonthlyRevenue;
+
+    const scenarioMonthlyGrossProfitAtCurrentRevenue = currentMonthlyRevenue * scenarioMarginDecimal;
+    const scenarioMonthlySurplusAtCurrentRevenue = scenarioMonthlyGrossProfitAtCurrentRevenue - scenarioFixedCosts;
+
+    const scenarioMonthlyGrowthPercent = currentMonthlyGrowthPercent + growthChangeInput;
+    const scenarioGrowthDecimal = scenarioMonthlyGrowthPercent / 100;
+
+    let monthsToScenarioBreakEven = null;
+
+    if (scenarioBreakEvenRevenue <= currentMonthlyRevenue) {
+      monthsToScenarioBreakEven = 0;
+    } else if (scenarioGrowthDecimal > 0) {
+      const ratio = scenarioBreakEvenRevenue / currentMonthlyRevenue;
+      const rawMonths = Math.log(ratio) / Math.log(1 + scenarioGrowthDecimal);
+      const roundedMonths = Math.ceil(rawMonths);
+      monthsToScenarioBreakEven = roundedMonths + Math.round(rampDelayInput);
+    }
+
+    const effectiveMonthsForTarget = Math.max(1, Math.round(targetMonths) - Math.round(rampDelayInput));
+    const requiredGrowthDecimal = Math.pow(scenarioBreakEvenRevenue / currentMonthlyRevenue, 1 / effectiveMonthsForTarget) - 1;
+
+    /* SENSITIVITY CALCULATION */
+
+    const scenarioMarginUpPercent = scenarioGrossMarginPercent + 1;
+    const scenarioMarginUpDecimal = scenarioMarginUpPercent / 100;
+
+    const scenarioBreakEvenRevenueMarginUp = scenarioFixedCosts / scenarioMarginUpDecimal;
+    const breakEvenReductionFromMarginUp = scenarioBreakEvenRevenue - scenarioBreakEvenRevenueMarginUp;
+
+    /* REPORT TEXT VARIABLES */
+
+    const currentRevenueFormatted = formatNumber(currentMonthlyRevenue);
+    const currentFixedCostsFormatted = formatNumber(currentFixedCosts);
+    const newFixedCostsFormatted = formatNumber(newFixedCosts);
+
+    const baselineGrossProfitFormatted = formatNumber(baselineMonthlyGrossProfit);
+    const baselineSurplusFormatted = formatNumber(baselineMonthlySurplus);
+    const baselineBreakEvenRevenueFormatted = formatNumber(baselineBreakEvenRevenue);
+    const baselineBreakEvenGapFormatted = formatNumber(baselineBreakEvenGap);
+
+    const scenarioFixedCostsFormatted = formatNumber(scenarioFixedCosts);
+    const scenarioBreakEvenRevenueFormatted = formatNumber(scenarioBreakEvenRevenue);
+    const additionalRevenueRequiredFormatted = formatNumber(additionalRevenueRequired);
+
+    const percentIncreaseDisplay = Math.round(percentIncreaseDecimal * 100);
+
+    const scenarioGrossMarginDisplay = Math.round(scenarioGrossMarginPercent);
+    const scenarioMonthlySurplusAtCurrentRevenueFormatted = formatNumber(scenarioMonthlySurplusAtCurrentRevenue);
+
+    const scenarioMonthlyGrowthDisplay = Math.round(scenarioMonthlyGrowthPercent);
+    const requiredGrowthDisplay = Math.round(requiredGrowthDecimal * 100);
+
+    const rampDelayDisplay = Math.round(rampDelayInput);
+    const targetMonthsDisplay = Math.round(targetMonths);
+
+    const breakEvenReductionFromMarginUpFormatted = formatNumber(breakEvenReductionFromMarginUp);
+
+    let monthsToScenarioBreakEvenText = "";
+    if (monthsToScenarioBreakEven === null) {
+      monthsToScenarioBreakEvenText = "Not reachable under a non-positive growth assumption.";
+    } else if (monthsToScenarioBreakEven === 0) {
+      monthsToScenarioBreakEvenText = "Already covered at current revenue.";
+    } else {
+      monthsToScenarioBreakEvenText = formatNumber(monthsToScenarioBreakEven) + " months.";
+    }
+
+    const overrunDisplay = Math.round(fixedOverrunInput);
+    const currentMonthlyGrowthDisplay = Math.round(currentMonthlyGrowthPercent);
+
+    /* REPORT RENDER */
 
     const report =
-      "<div class='tool-report'>" +
-        "<p><strong>Diagnostic Summary</strong><br>" +
-        "Current monthly revenue is " + currentRevenueRounded + " with fixed costs of " + currentFixedCostsRounded + ". " +
-        "Adding " + newFixedCostsRounded + " in monthly fixed costs increases the cost base to " + newTotalFixedCostsRounded + ". " +
-        "At a gross margin of " + Math.round(grossMarginDecimal * 100) + "%, break-even revenue for the new structure is " + breakEvenRevenueRequiredRounded + ".</p>" +
+      "<p><strong>Diagnostic Summary</strong></p>" +
+      "<p>At current revenue of " + currentRevenueFormatted + " per month and gross margin of " + Math.round(baselineMarginDecimal * 100) + "%, the existing fixed cost base of " + currentFixedCostsFormatted + " implies a baseline break-even revenue of " + baselineBreakEvenRevenueFormatted + " per month. The proposed fixed cost increase of " + newFixedCostsFormatted + " lifts the scenario fixed cost base to " + scenarioFixedCostsFormatted + ", pushing scenario break-even revenue to " + scenarioBreakEvenRevenueFormatted + ".</p>" +
 
-        "<p><strong>Key Mechanics</strong><br>" +
-        keyMechanics + " " +
-        "The additional revenue required to cover the new fixed costs is " + additionalRevenueRequiredRounded + " per month, " +
-        "which implies approximately " + revenueGrowthRequiredPercent + "% growth from the current level.</p>" +
+      "<p><strong>Key Mechanics</strong></p>" +
+      "<p>Baseline monthly gross profit is " + baselineGrossProfitFormatted + " and baseline monthly surplus is " + baselineSurplusFormatted + ", which frames how much buffer exists before expansion. Under the scenario, break-even requires an additional " + additionalRevenueRequiredFormatted + " of monthly revenue, which is a " + percentIncreaseDisplay + "% increase versus the current run-rate.</p>" +
+      "<p>With scenario gross margin at " + scenarioGrossMarginDisplay + "% and monthly growth at " + scenarioMonthlyGrowthDisplay + "% after a " + rampDelayDisplay + " month ramp delay, time to reach scenario break-even is: " + monthsToScenarioBreakEvenText + "</p>" +
+      "<p>A 1% margin improvement reduces scenario break-even revenue by " + breakEvenReductionFromMarginUpFormatted + ".</p>" +
 
-        "<p><strong>Operational Interpretation</strong><br>" +
-        operationalInterpretation + " " +
-        "Your current gross profit is " + currentGrossProfitRounded + " per month and current operating profit is " + currentOperatingProfitRounded + " before the expansion.</p>" +
+      "<p><strong>Operational Interpretation</strong></p>" +
+      "<p>If revenue remained flat at " + currentRevenueFormatted + ", the scenario monthly surplus would be " + scenarioMonthlySurplusAtCurrentRevenueFormatted + ", which is the immediate operational pressure created by the higher cost base. This is why expansion requires coordination across pricing discipline, order intake cadence, and the ability to fulfill volume without margin leakage.</p>" +
 
-        "<p><strong>Structural Risk Observation</strong><br>" +
-        structuralRiskObservation + " " +
-        breakEvenTimingRisk + "</p>" +
+      "<p><strong>Structural Risk Observation</strong></p>" +
+      "<p>The baseline break-even gap versus current revenue is " + baselineBreakEvenGapFormatted + ", so the business either already carries buffer or is already operating close to the line. In the scenario the business must sustain a " + requiredGrowthDisplay + "% monthly growth rate for " + formatNumber(effectiveMonthsForTarget) + " effective months to hit the " + targetMonthsDisplay + "-month target, which is sensitive to discounting, supplier terms, and overhead control.</p>" +
 
-        "<p><strong>Management Questions</strong><br>" +
-        "1) Which specific orders, customers, or channels will reliably deliver the extra " + requiredMonthlyRevenueLiftRounded + " monthly revenue?<br>" +
-        "2) What pricing and discount rules will protect the gross margin assumption during the expansion ramp?<br>" +
-        "3) What operational metrics will you review weekly to ensure fixed costs convert into throughput and cash generation?</p>" +
+      "<p><strong>Management Questions</strong></p>" +
+      "<p>Which pricing or supplier term changes would protect the scenario gross margin at " + scenarioGrossMarginDisplay + "% while volume scales?</p>" +
+      "<p>If growth stays at " + currentMonthlyGrowthDisplay + "% instead of " + scenarioMonthlyGrowthDisplay + "%, what operational cuts prevent a prolonged deficit?</p>" +
+      "<p>Which capacity constraints could slow order throughput and delay the " + targetMonthsDisplay + "-month break-even plan?</p>" +
 
-        "<p><strong>Selective Engagement Note</strong><br>" +
-        "This calculator tests one narrow structural dimension: the revenue velocity required to justify added fixed costs. " +
-        "Deeper diagnostics examine profit drivers, cost structure, capital deployment, cash flow timing, revenue concentration, supplier dynamics, and forward operating scenarios. " +
-        "If this diagnostic framing resonates, use the Contact page to explore fit and the next level of analysis.</p>" +
-      "</div>";
+      "<p><strong>Selective Engagement Note</strong></p>" +
+      "<p>This calculator evaluates only one narrow dimension of business structure: the revenue velocity required to carry a higher fixed cost base. Deeper diagnostic work examines how profit drivers, cost structure, capital deployment, cash flow timing, revenue concentration, supplier dynamics, and forward operating scenarios interact under real operational constraints. Only a limited number of businesses are worked with at any given time because the analysis requires detailed operational understanding of orders, pricing, fulfillment capacity, and cash conversion. If this diagnostic style matches how you want to run the business, use the Contact page to explore fit.</p>";
 
     resultContainer.innerHTML = report;
 
