@@ -14,6 +14,29 @@ document.addEventListener("DOMContentLoaded", function () {
     return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  function parseNum(str) {
+    return Number(String(str).replace(/,/g, ""));
+  }
+
+  function attachNumFormat(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.type = "text";
+    el.inputMode = "numeric";
+    el.addEventListener("blur", function () {
+      var raw = this.value.replace(/[^0-9.-]/g, "");
+      if (raw === "" || raw === "-") return;
+      var parts = raw.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.value = parts.join(".");
+    });
+    el.addEventListener("focus", function () {
+      this.value = this.value.replace(/,/g, "");
+    });
+  }
+
+  ["totalBusinessProfit","asset1Value","asset2Value","asset3Value","asset4Value","asset1Profit","asset2Profit","asset3Profit","asset4Profit"].forEach(attachNumFormat);
+
   function runDiagnostic() {
 
     resultContainer.innerHTML = "";
@@ -21,20 +44,20 @@ document.addEventListener("DOMContentLoaded", function () {
     /* INPUT COLLECTION */
 
     const requiredReturn = Number(document.getElementById("requiredReturn").value);
-    const totalBusinessProfit = Number(document.getElementById("totalBusinessProfit").value);
+    const totalBusinessProfit = parseNum(document.getElementById("totalBusinessProfit").value);
 
     const assetValues = [
-      Number(document.getElementById("asset1Value").value),
-      Number(document.getElementById("asset2Value").value),
-      Number(document.getElementById("asset3Value").value),
-      Number(document.getElementById("asset4Value").value)
+      parseNum(document.getElementById("asset1Value").value),
+      parseNum(document.getElementById("asset2Value").value),
+      parseNum(document.getElementById("asset3Value").value),
+      parseNum(document.getElementById("asset4Value").value)
     ];
 
     const assetProfits = [
-      Number(document.getElementById("asset1Profit").value),
-      Number(document.getElementById("asset2Profit").value),
-      Number(document.getElementById("asset3Profit").value),
-      Number(document.getElementById("asset4Profit").value)
+      parseNum(document.getElementById("asset1Profit").value),
+      parseNum(document.getElementById("asset2Profit").value),
+      parseNum(document.getElementById("asset3Profit").value),
+      parseNum(document.getElementById("asset4Profit").value)
     ];
 
     /* VALIDATION */
@@ -104,7 +127,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let tableRows = "";
     assets.forEach(function (a) {
       const returnLabel = Math.round(a.actualReturnPct * 10) / 10 + "%";
-      const shortfallLabel = a.isIdle ? formatNumber(a.shortfall) : "—";
+      const shortfallLabel = a.isIdle ? formatNumber(a.shortfall) : "n/a";
       const status = a.isIdle ? "Below threshold" : "At or above threshold";
       tableRows +=
         "<tr><td>Asset " + a.index + "</td><td>" +

@@ -13,6 +13,29 @@ document.addEventListener("DOMContentLoaded", function () {
   const rounded = Math.round(value);
   return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
+
+  function parseNum(str) {
+    return Number(String(str).replace(/,/g, ""));
+  }
+
+  function attachNumFormat(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.type = "text";
+    el.inputMode = "numeric";
+    el.addEventListener("blur", function () {
+      var raw = this.value.replace(/[^0-9.-]/g, "");
+      if (raw === "" || raw === "-") return;
+      var parts = raw.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.value = parts.join(".");
+    });
+    el.addEventListener("focus", function () {
+      this.value = this.value.replace(/,/g, "");
+    });
+  }
+
+  ["price","cost","volume","fixedCost"].forEach(attachNumFormat);
   
   function runDiagnostic() {
   
@@ -20,12 +43,12 @@ document.addEventListener("DOMContentLoaded", function () {
   
   /* INPUT COLLECTION */
   
-  const price = Number(document.getElementById("price").value);
-  const cost = Number(document.getElementById("cost").value);
-  const volume = Number(document.getElementById("volume").value);
+  const price = parseNum(document.getElementById("price").value);
+  const cost = parseNum(document.getElementById("cost").value);
+  const volume = parseNum(document.getElementById("volume").value);
   const discount = Number(document.getElementById("discount").value);
   const growth = Number(document.getElementById("growth").value);
-  const fixedCost = Number(document.getElementById("fixedCost").value);
+  const fixedCost = parseNum(document.getElementById("fixedCost").value);
   
   const returnsInput = document.getElementById("returns").value;
   const costChangeInput = document.getElementById("costChange").value;

@@ -14,21 +14,44 @@ document.addEventListener("DOMContentLoaded", function () {
     return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  function parseNum(str) {
+    return Number(String(str).replace(/,/g, ""));
+  }
+
+  function attachNumFormat(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.type = "text";
+    el.inputMode = "numeric";
+    el.addEventListener("blur", function () {
+      var raw = this.value.replace(/[^0-9.-]/g, "");
+      if (raw === "" || raw === "-") return;
+      var parts = raw.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.value = parts.join(".");
+    });
+    el.addEventListener("focus", function () {
+      this.value = this.value.replace(/,/g, "");
+    });
+  }
+
+  ["currentMonthlyRevenue","existingCash","overdraftLimit"].forEach(attachNumFormat);
+
   function runDiagnostic() {
 
     resultContainer.innerHTML = "";
 
     /* INPUT COLLECTION */
 
-    const currentMonthlyRevenue = Number(document.getElementById("currentMonthlyRevenue").value);
+    const currentMonthlyRevenue = parseNum(document.getElementById("currentMonthlyRevenue").value);
     const revenueGrowthPct = Number(document.getElementById("revenueGrowthPct").value);
     const grossMarginPct = Number(document.getElementById("grossMarginPct").value);
     const debtorDays = Number(document.getElementById("debtorDays").value);
     const creditorDays = Number(document.getElementById("creditorDays").value);
     const projectionMonths = Number(document.getElementById("projectionMonths").value);
     const inventoryDays = Number(document.getElementById("inventoryDays").value) || 0;
-    const existingCash = Number(document.getElementById("existingCash").value) || 0;
-    const overdraftLimit = Number(document.getElementById("overdraftLimit").value) || 0;
+    const existingCash = parseNum(document.getElementById("existingCash").value) || 0;
+    const overdraftLimit = parseNum(document.getElementById("overdraftLimit").value) || 0;
 
     /* VALIDATION */
 
@@ -144,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "<p><strong>Management Questions</strong></p>" +
       "<p>At the projected revenue level, what combination of cash reserves, facility headroom, and operating profit is available to fund the working capital gap, and has that been stress-tested?</p>" +
       "<p>If debtor days were reduced by 10 days through tighter collections, how much of the growth-driven working capital requirement would be self-funded?</p>" +
-      "<p>Is the projected growth rate achievable without a corresponding commitment to funding — and if not, what is the maximum growth rate that can be supported within current liquidity constraints?</p>" +
+      "<p>Is the projected growth rate achievable without a corresponding commitment to funding. If not, what is the maximum growth rate that can be supported within current liquidity constraints?</p>" +
 
       "<p><strong>Selective Engagement Note</strong></p>" +
       "<p>This calculator evaluates only one narrow dimension of business structure: the working capital cost of revenue growth. Deeper diagnostic work examines how growth interacts with margin behaviour, overhead absorption, supplier capacity, customer concentration, and the structural sustainability of the business model at higher revenue levels. MJB Strategic works with a limited number of businesses at any time because growth capital planning requires understanding both the financial structure and the operational constraints of the specific business. If this diagnostic thinking resonates, the contact page provides a route to explore whether a deeper engagement would be appropriate.</p>";

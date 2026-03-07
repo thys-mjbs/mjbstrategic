@@ -13,6 +13,29 @@ document.addEventListener("DOMContentLoaded", function () {
   const rounded = Math.round(value);
   return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
+
+  function parseNum(str) {
+    return Number(String(str).replace(/,/g, ""));
+  }
+
+  function attachNumFormat(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.type = "text";
+    el.inputMode = "numeric";
+    el.addEventListener("blur", function () {
+      var raw = this.value.replace(/[^0-9.-]/g, "");
+      if (raw === "" || raw === "-") return;
+      var parts = raw.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.value = parts.join(".");
+    });
+    el.addEventListener("focus", function () {
+      this.value = this.value.replace(/,/g, "");
+    });
+  }
+
+  ["rev1","rev2","rev3","rev4","rev5","rev6"].forEach(attachNumFormat);
   
   function runDiagnostic() {
   
@@ -21,12 +44,12 @@ document.addEventListener("DOMContentLoaded", function () {
   /* INPUT COLLECTION */
   
   const revenues = [
-  Number(document.getElementById("rev1").value),
-  Number(document.getElementById("rev2").value),
-  Number(document.getElementById("rev3").value),
-  Number(document.getElementById("rev4").value),
-  Number(document.getElementById("rev5").value),
-  Number(document.getElementById("rev6").value)
+  parseNum(document.getElementById("rev1").value),
+  parseNum(document.getElementById("rev2").value),
+  parseNum(document.getElementById("rev3").value),
+  parseNum(document.getElementById("rev4").value),
+  parseNum(document.getElementById("rev5").value),
+  parseNum(document.getElementById("rev6").value)
   ];
   
   const margins = [

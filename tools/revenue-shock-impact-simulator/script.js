@@ -14,18 +14,41 @@ document.addEventListener("DOMContentLoaded", function () {
     return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  function parseNum(str) {
+    return Number(String(str).replace(/,/g, ""));
+  }
+
+  function attachNumFormat(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.type = "text";
+    el.inputMode = "numeric";
+    el.addEventListener("blur", function () {
+      var raw = this.value.replace(/[^0-9.-]/g, "");
+      if (raw === "" || raw === "-") return;
+      var parts = raw.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.value = parts.join(".");
+    });
+    el.addEventListener("focus", function () {
+      this.value = this.value.replace(/,/g, "");
+    });
+  }
+
+  ["annualRevenue","monthlyFixedCosts","currentCash"].forEach(attachNumFormat);
+
   function runDiagnostic() {
 
     resultContainer.innerHTML = "";
 
     /* INPUT COLLECTION */
 
-    const annualRevenue = Number(document.getElementById("annualRevenue").value);
+    const annualRevenue = parseNum(document.getElementById("annualRevenue").value);
     const grossMarginPct = Number(document.getElementById("grossMarginPct").value);
     const operatingMarginPct = Number(document.getElementById("operatingMarginPct").value);
     const topCustomerRevenuePct = Number(document.getElementById("topCustomerRevenuePct").value);
-    const monthlyFixedCosts = Number(document.getElementById("monthlyFixedCosts").value);
-    const currentCash = Number(document.getElementById("currentCash").value);
+    const monthlyFixedCosts = parseNum(document.getElementById("monthlyFixedCosts").value);
+    const currentCash = parseNum(document.getElementById("currentCash").value);
     const topCustomerMarginPct = Number(document.getElementById("topCustomerMarginPct").value) || grossMarginPct;
     const replacementMonths = Number(document.getElementById("replacementMonths").value) || 0;
     const costReductionPct = Number(document.getElementById("costReductionPct").value) || 0;
@@ -126,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "<table><thead><tr><th>Metric</th><th>Baseline</th><th>Post-Shock</th><th>Change</th></tr></thead><tbody>" +
       "<tr><td>Annual revenue</td><td>" + formatNumber(annualRevenue) + "</td><td>" + formatNumber(remainingRevenue) + "</td><td>(" + formatNumber(topCustomerRevenue) + ")</td></tr>" +
       "<tr><td>Gross profit</td><td>" + formatNumber(totalGrossProfit) + "</td><td>" + formatNumber(remainingGrossProfit) + "</td><td>(" + formatNumber(topCustomerGrossProfit) + ")</td></tr>" +
-      "<tr><td>Fixed costs</td><td>" + formatNumber(annualFixedCosts) + "</td><td>" + formatNumber(reducedFixedCosts) + "</td><td>" + (costReductionPct > 0 ? "(" + formatNumber(annualFixedCosts - reducedFixedCosts) + ")" : "—") + "</td></tr>" +
+      "<tr><td>Fixed costs</td><td>" + formatNumber(annualFixedCosts) + "</td><td>" + formatNumber(reducedFixedCosts) + "</td><td>" + (costReductionPct > 0 ? "(" + formatNumber(annualFixedCosts - reducedFixedCosts) + ")" : "n/a") + "</td></tr>" +
       "<tr><td>Operating profit/(loss)</td><td>" + formatNumber(totalOperatingProfit) + "</td><td>" + (postShockOperatingProfit >= 0 ? formatNumber(postShockOperatingProfit) : "(" + formatNumber(Math.abs(postShockOperatingProfit)) + ")") + "</td><td>" + (profitDelta >= 0 ? "+" + formatNumber(profitDelta) : "(" + formatNumber(Math.abs(profitDelta)) + ")") + "</td></tr>" +
       "</tbody></table>" +
       "<p>The profit decline represents a " + Math.abs(Math.round(profitDeltaPct)) +
@@ -141,11 +164,11 @@ document.addEventListener("DOMContentLoaded", function () {
       "% of revenue does not translate to a " + topCustomerRevenuePct +
       "% reduction in profit because the fixed cost structure remains. The gross margin on the lost revenue is " + topCustomerMarginPct +
       "%, meaning the direct contribution lost is " + formatNumber(topCustomerGrossProfit) +
-      " annually. But the overhead that was being absorbed by that revenue — approximately " +
-      formatNumber(topCustomerOverheadAllocation) + " — must now be carried by the remaining revenue base, which is smaller and potentially insufficient to sustain current operating structure.</p>" +
+      " annually. But the overhead that was being absorbed by that revenue (approximately " +
+      formatNumber(topCustomerOverheadAllocation) + ") must now be carried by the remaining revenue base, which is smaller and potentially insufficient to sustain current operating structure.</p>" +
 
       "<p><strong>Structural Risk Observation</strong></p>" +
-      "<p>Revenue concentration means that the financial consequence of a single relationship decision — a non-renewal, a renegotiation, or a lost tender — is not proportional to its revenue weight. It is amplified by the overhead absorption effect. A business that appears operationally robust at current revenue levels may be loss-making at the post-shock level, with a runway measured in months rather than years.</p>" +
+      "<p>Revenue concentration means that the financial consequence of a single relationship decision (a non-renewal, a renegotiation, or a lost tender) is not proportional to its revenue weight. It is amplified by the overhead absorption effect. A business that appears operationally robust at current revenue levels may be loss-making at the post-shock level, with a runway measured in months rather than years.</p>" +
 
       "<p><strong>Management Questions</strong></p>" +
       "<p>What is the realistic timeline to replace this revenue through existing pipeline, and has that pipeline been stress-tested against win rates and deal timelines?</p>" +

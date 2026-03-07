@@ -14,6 +14,29 @@ document.addEventListener("DOMContentLoaded", function () {
     return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  function parseNum(str) {
+    return Number(String(str).replace(/,/g, ""));
+  }
+
+  function attachNumFormat(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.type = "text";
+    el.inputMode = "numeric";
+    el.addEventListener("blur", function () {
+      var raw = this.value.replace(/[^0-9.-]/g, "");
+      if (raw === "" || raw === "-") return;
+      var parts = raw.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.value = parts.join(".");
+    });
+    el.addEventListener("focus", function () {
+      this.value = this.value.replace(/,/g, "");
+    });
+  }
+
+  ["annualRevenue"].forEach(attachNumFormat);
+
   function runDiagnostic() {
 
     resultContainer.innerHTML = "";
@@ -34,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
       Number(document.getElementById("seg4Margin").value),
       Number(document.getElementById("seg5Margin").value)
     ];
-    const annualRevenue = Number(document.getElementById("annualRevenue").value);
+    const annualRevenue = parseNum(document.getElementById("annualRevenue").value);
 
     /* VALIDATION */
 
@@ -98,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const top2ProfitShare = completedCount >= 2 ?
       ((sortedByProfit[0].grossProfit + sortedByProfit[1].grossProfit) / totalGrossProfit) * 100 : top1ProfitShare;
 
-    /* SCENARIO — remove top segment */
+    /* SCENARIO: remove top segment */
 
     const remainingRevenue = annualRevenue * ((100 - sortedByProfit[0].pct) / 100);
     const remainingProfit = totalGrossProfit - sortedByProfit[0].grossProfit;

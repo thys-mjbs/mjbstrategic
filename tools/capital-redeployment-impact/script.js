@@ -14,17 +14,40 @@ document.addEventListener("DOMContentLoaded", function () {
     return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  function parseNum(str) {
+    return Number(String(str).replace(/,/g, ""));
+  }
+
+  function attachNumFormat(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.type = "text";
+    el.inputMode = "numeric";
+    el.addEventListener("blur", function () {
+      var raw = this.value.replace(/[^0-9.-]/g, "");
+      if (raw === "" || raw === "-") return;
+      var parts = raw.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.value = parts.join(".");
+    });
+    el.addEventListener("focus", function () {
+      this.value = this.value.replace(/,/g, "");
+    });
+  }
+
+  ["assetValue","currentOperatingProfit","annualRevenue"].forEach(attachNumFormat);
+
   function runDiagnostic() {
 
     resultContainer.innerHTML = "";
 
     /* INPUT COLLECTION */
 
-    const assetValue = Number(document.getElementById("assetValue").value);
+    const assetValue = parseNum(document.getElementById("assetValue").value);
     const currentReturnPct = Number(document.getElementById("currentReturnPct").value);
     const alternativeReturnPct = Number(document.getElementById("alternativeReturnPct").value);
-    const currentOperatingProfit = Number(document.getElementById("currentOperatingProfit").value);
-    const annualRevenue = Number(document.getElementById("annualRevenue").value);
+    const currentOperatingProfit = parseNum(document.getElementById("currentOperatingProfit").value);
+    const annualRevenue = parseNum(document.getElementById("annualRevenue").value);
     const liquidationDiscountPct = Number(document.getElementById("liquidationDiscountPct").value);
     const transactionCostsPct = Number(document.getElementById("transactionCostsPct").value);
     const transitionMonths = Number(document.getElementById("transitionMonths").value);

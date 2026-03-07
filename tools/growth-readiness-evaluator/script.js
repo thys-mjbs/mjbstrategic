@@ -14,21 +14,44 @@ document.addEventListener("DOMContentLoaded", function () {
     return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  function parseNum(str) {
+    return Number(String(str).replace(/,/g, ""));
+  }
+
+  function attachNumFormat(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.type = "text";
+    el.inputMode = "numeric";
+    el.addEventListener("blur", function () {
+      var raw = this.value.replace(/[^0-9.-]/g, "");
+      if (raw === "" || raw === "-") return;
+      var parts = raw.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.value = parts.join(".");
+    });
+    el.addEventListener("focus", function () {
+      this.value = this.value.replace(/,/g, "");
+    });
+  }
+
+  ["currentRevenue","annualFixedCosts","availableCash","additionalFixedCosts"].forEach(attachNumFormat);
+
   function runDiagnostic() {
 
     resultContainer.innerHTML = "";
 
     /* INPUT COLLECTION */
 
-    const currentRevenue = Number(document.getElementById("currentRevenue").value);
+    const currentRevenue = parseNum(document.getElementById("currentRevenue").value);
     const grossMarginPct = Number(document.getElementById("grossMarginPct").value);
-    const annualFixedCosts = Number(document.getElementById("annualFixedCosts").value);
-    const availableCash = Number(document.getElementById("availableCash").value);
+    const annualFixedCosts = parseNum(document.getElementById("annualFixedCosts").value);
+    const availableCash = parseNum(document.getElementById("availableCash").value);
     const debtorDays = Number(document.getElementById("debtorDays").value);
     const inventoryDays = Number(document.getElementById("inventoryDays").value) || 0;
     const targetGrowthPct = Number(document.getElementById("targetGrowthPct").value);
     const growthGrossMarginPct = Number(document.getElementById("growthGrossMarginPct").value) || grossMarginPct;
-    const additionalFixedCosts = Number(document.getElementById("additionalFixedCosts").value) || 0;
+    const additionalFixedCosts = parseNum(document.getElementById("additionalFixedCosts").value) || 0;
 
     /* VALIDATION */
 
@@ -152,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "<p>Growth readiness analysis separates the profitability of growth from the fundability of growth. A business can identify a growth opportunity with attractive incremental margins and still be unable to pursue it because the working capital required to fund the debtor cycle and inventory build absorbs more cash than the business holds. This is particularly relevant for businesses with long DSO profiles: at " + debtorDays + " days, each unit of revenue growth requires funding for " + debtorDays + " days before cash is received, and this funding requirement scales linearly with the revenue increase.</p>" +
 
       "<p><strong>Structural Risk Observation</strong></p>" +
-      "<p>The most common growth failure mode is not bad strategy — it is inadequate financial structure to fund execution. Businesses that grow rapidly through their available cash and credit facility often find themselves operationally committed to serving new customers or fulfilling larger contracts before the cash from that activity has been collected. The resulting cash pressure forces reactive decisions about creditor payments, staff headcount, or capital investment that damage the quality of the growth rather than enabling it. At the target growth rate, the binding constraint is " + (isCashPositive ? "not cash — the margin structure and cost step-up are the primary risks" : "cash — the working capital requirement exceeds available resources and must be resolved before execution begins") + ".</p>" +
+      "<p>The most common growth failure mode is not bad strategy. It is inadequate financial structure to fund execution. Businesses that grow rapidly through their available cash and credit facility often find themselves operationally committed to serving new customers or fulfilling larger contracts before the cash from that activity has been collected. The resulting cash pressure forces reactive decisions about creditor payments, staff headcount, or capital investment that damage the quality of the growth rather than enabling it. At the target growth rate, the binding constraint is " + (isCashPositive ? "not cash: the margin structure and cost step-up are the primary risks" : "cash: the working capital requirement exceeds available resources and must be resolved before execution begins") + ".</p>" +
 
       "<p><strong>Management Questions</strong></p>" +
       "<p>Is the growth margin assumption realistic, or does the target growth require price concessions or access to lower-margin customer segments that would compress the incremental return?</p>" +

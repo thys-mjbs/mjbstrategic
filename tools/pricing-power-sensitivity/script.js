@@ -13,11 +13,34 @@ document.addEventListener("DOMContentLoaded", function () {
     return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  function parseNum(str) {
+    return Number(String(str).replace(/,/g, ""));
+  }
+
+  function attachNumFormat(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.type = "text";
+    el.inputMode = "numeric";
+    el.addEventListener("blur", function () {
+      var raw = this.value.replace(/[^0-9.-]/g, "");
+      if (raw === "" || raw === "-") return;
+      var parts = raw.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.value = parts.join(".");
+    });
+    el.addEventListener("focus", function () {
+      this.value = this.value.replace(/,/g, "");
+    });
+  }
+
+  ["annualRevenue","orderCount"].forEach(attachNumFormat);
+
   function runDiagnostic() {
     resultContainer.innerHTML = "";
 
     /* INPUT COLLECTION */
-    const annualRevenue = Number(document.getElementById("annualRevenue").value);
+    const annualRevenue = parseNum(document.getElementById("annualRevenue").value);
     const grossMarginPct = Number(document.getElementById("grossMarginPct").value);
     const demandChangePer1Pct = Number(document.getElementById("demandChangePer1Pct").value);
 
@@ -31,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const priceRealisationPct = priceRealisationPctInput === "" ? null : Number(priceRealisationPctInput);
     const variableCostPctOfRevenue = variableCostPctInput === "" ? null : Number(variableCostPctInput);
-    const orderCount = orderCountInput === "" ? null : Number(orderCountInput);
+    const orderCount = orderCountInput === "" ? null : parseNum(orderCountInput);
 
     /* VALIDATION */
     const requiredValues = [

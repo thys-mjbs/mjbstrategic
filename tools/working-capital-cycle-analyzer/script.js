@@ -14,6 +14,29 @@ document.addEventListener("DOMContentLoaded", function () {
     return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  function parseNum(str) {
+    return Number(String(str).replace(/,/g, ""));
+  }
+
+  function attachNumFormat(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.type = "text";
+    el.inputMode = "numeric";
+    el.addEventListener("blur", function () {
+      var raw = this.value.replace(/[^0-9.-]/g, "");
+      if (raw === "" || raw === "-") return;
+      var parts = raw.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.value = parts.join(".");
+    });
+    el.addEventListener("focus", function () {
+      this.value = this.value.replace(/,/g, "");
+    });
+  }
+
+  ["monthlyRevenue","annualRevenue"].forEach(attachNumFormat);
+
   function runDiagnostic() {
 
     resultContainer.innerHTML = "";
@@ -23,9 +46,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const debtorDays = Number(document.getElementById("debtorDays").value);
     const creditorDays = Number(document.getElementById("creditorDays").value);
     const inventoryDays = Number(document.getElementById("inventoryDays").value);
-    const monthlyRevenue = Number(document.getElementById("monthlyRevenue").value);
+    const monthlyRevenue = parseNum(document.getElementById("monthlyRevenue").value);
     const grossMarginPct = Number(document.getElementById("grossMarginPct").value);
-    const annualRevenue = Number(document.getElementById("annualRevenue").value);
+    const annualRevenue = parseNum(document.getElementById("annualRevenue").value);
     const overdraftRatePct = Number(document.getElementById("overdraftRatePct").value);
     const targetDebtorDays = Number(document.getElementById("targetDebtorDays").value);
     const targetInventoryDays = Number(document.getElementById("targetInventoryDays").value);
@@ -148,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "<table><thead><tr><th>Component</th><th>Days</th><th>Capital Tied Up</th></tr></thead><tbody>" +
       "<tr><td>Receivables (debtors)</td><td>" + debtorDays + "</td><td>" + receivablesFormatted + "</td></tr>" +
       "<tr><td>Inventory</td><td>" + inventoryDays + "</td><td>" + inventoryFormatted + "</td></tr>" +
-      "<tr><td>Payables (creditors) — offset</td><td>(" + creditorDays + ")</td><td>(" + payablesFormatted + ")</td></tr>" +
+      "<tr><td>Payables (creditors, offset)</td><td>(" + creditorDays + ")</td><td>(" + payablesFormatted + ")</td></tr>" +
       "<tr><td><strong>Net working capital</strong></td><td><strong>" + cashConversionCycle + "</strong></td><td><strong>" + netWCFormatted + "</strong></td></tr>" +
       "</tbody></table>" +
       "<p>" + scenarioNote +

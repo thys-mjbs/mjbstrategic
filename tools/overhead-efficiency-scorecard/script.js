@@ -14,21 +14,44 @@ document.addEventListener("DOMContentLoaded", function () {
     return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  function parseNum(str) {
+    return Number(String(str).replace(/,/g, ""));
+  }
+
+  function attachNumFormat(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.type = "text";
+    el.inputMode = "numeric";
+    el.addEventListener("blur", function () {
+      var raw = this.value.replace(/[^0-9.-]/g, "");
+      if (raw === "" || raw === "-") return;
+      var parts = raw.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.value = parts.join(".");
+    });
+    el.addEventListener("focus", function () {
+      this.value = this.value.replace(/,/g, "");
+    });
+  }
+
+  ["annualRevenue","overheadCosts","rentAndFacilities","staffOverhead","priorYearRevenue","priorYearOverhead"].forEach(attachNumFormat);
+
   function runDiagnostic() {
 
     resultContainer.innerHTML = "";
 
     /* INPUT COLLECTION */
 
-    const annualRevenue = Number(document.getElementById("annualRevenue").value);
+    const annualRevenue = parseNum(document.getElementById("annualRevenue").value);
     const grossMarginPct = Number(document.getElementById("grossMarginPct").value);
-    const overheadCosts = Number(document.getElementById("overheadCosts").value);
+    const overheadCosts = parseNum(document.getElementById("overheadCosts").value);
     const headcount = Number(document.getElementById("headcount").value);
-    const rentAndFacilities = Number(document.getElementById("rentAndFacilities").value);
-    const staffOverhead = Number(document.getElementById("staffOverhead").value);
+    const rentAndFacilities = parseNum(document.getElementById("rentAndFacilities").value);
+    const staffOverhead = parseNum(document.getElementById("staffOverhead").value);
     const targetOverheadPct = Number(document.getElementById("targetOverheadPct").value);
-    const priorYearRevenue = Number(document.getElementById("priorYearRevenue").value);
-    const priorYearOverhead = Number(document.getElementById("priorYearOverhead").value);
+    const priorYearRevenue = parseNum(document.getElementById("priorYearRevenue").value);
+    const priorYearOverhead = parseNum(document.getElementById("priorYearOverhead").value);
 
     /* VALIDATION */
 

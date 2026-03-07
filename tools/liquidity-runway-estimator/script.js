@@ -14,21 +14,44 @@ document.addEventListener("DOMContentLoaded", function () {
     return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  function parseNum(str) {
+    return Number(String(str).replace(/,/g, ""));
+  }
+
+  function attachNumFormat(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.type = "text";
+    el.inputMode = "numeric";
+    el.addEventListener("blur", function () {
+      var raw = this.value.replace(/[^0-9.-]/g, "");
+      if (raw === "" || raw === "-") return;
+      var parts = raw.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.value = parts.join(".");
+    });
+    el.addEventListener("focus", function () {
+      this.value = this.value.replace(/,/g, "");
+    });
+  }
+
+  ["currentCash","monthlyFixedCosts","normalMonthlyRevenue","creditFacility","monthlyDebtService"].forEach(attachNumFormat);
+
   function runDiagnostic() {
 
     resultContainer.innerHTML = "";
 
     /* INPUT COLLECTION */
 
-    const currentCash = Number(document.getElementById("currentCash").value);
-    const monthlyFixedCosts = Number(document.getElementById("monthlyFixedCosts").value);
-    const normalMonthlyRevenue = Number(document.getElementById("normalMonthlyRevenue").value);
+    const currentCash = parseNum(document.getElementById("currentCash").value);
+    const monthlyFixedCosts = parseNum(document.getElementById("monthlyFixedCosts").value);
+    const normalMonthlyRevenue = parseNum(document.getElementById("normalMonthlyRevenue").value);
     const grossMarginPct = Number(document.getElementById("grossMarginPct").value);
     const downturnRevenuePct = Number(document.getElementById("downturnRevenuePct").value);
     const debtorDays = Number(document.getElementById("debtorDays").value);
-    const creditFacility = Number(document.getElementById("creditFacility").value) || 0;
+    const creditFacility = parseNum(document.getElementById("creditFacility").value) || 0;
     const costReductionPct = Number(document.getElementById("costReductionPct").value) || 0;
-    const monthlyDebtService = Number(document.getElementById("monthlyDebtService").value) || 0;
+    const monthlyDebtService = parseNum(document.getElementById("monthlyDebtService").value) || 0;
 
     /* VALIDATION */
 
@@ -77,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
       runwayMonths = Math.floor(totalAvailableFunds / Math.abs(monthlyNetCashFlow));
     }
 
-    /* SCENARIO — zero revenue */
+    /* SCENARIO: zero revenue */
 
     const zeroRevenueBurn = reducedFixedCosts + monthlyDebtService;
     const zeroRevenueRunway = Math.floor(totalAvailableFunds / zeroRevenueBurn);

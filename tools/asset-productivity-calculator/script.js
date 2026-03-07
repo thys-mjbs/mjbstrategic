@@ -14,20 +14,43 @@ document.addEventListener("DOMContentLoaded", function () {
     return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  function parseNum(str) {
+    return Number(String(str).replace(/,/g, ""));
+  }
+
+  function attachNumFormat(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.type = "text";
+    el.inputMode = "numeric";
+    el.addEventListener("blur", function () {
+      var raw = this.value.replace(/[^0-9.-]/g, "");
+      if (raw === "" || raw === "-") return;
+      var parts = raw.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.value = parts.join(".");
+    });
+    el.addEventListener("focus", function () {
+      this.value = this.value.replace(/,/g, "");
+    });
+  }
+
+  ["totalAssets","operatingProfit","annualRevenue","fixedAssets","cashAndEquivalents","receivables","totalDebt","annualDepreciation"].forEach(attachNumFormat);
+
   function runDiagnostic() {
 
     resultContainer.innerHTML = "";
 
     /* INPUT COLLECTION */
 
-    const totalAssets = Number(document.getElementById("totalAssets").value);
-    const operatingProfit = Number(document.getElementById("operatingProfit").value);
-    const annualRevenue = Number(document.getElementById("annualRevenue").value);
-    const fixedAssets = Number(document.getElementById("fixedAssets").value);
-    const cashAndEquivalents = Number(document.getElementById("cashAndEquivalents").value);
-    const receivables = Number(document.getElementById("receivables").value);
-    const totalDebt = Number(document.getElementById("totalDebt").value);
-    const annualDepreciation = Number(document.getElementById("annualDepreciation").value);
+    const totalAssets = parseNum(document.getElementById("totalAssets").value);
+    const operatingProfit = parseNum(document.getElementById("operatingProfit").value);
+    const annualRevenue = parseNum(document.getElementById("annualRevenue").value);
+    const fixedAssets = parseNum(document.getElementById("fixedAssets").value);
+    const cashAndEquivalents = parseNum(document.getElementById("cashAndEquivalents").value);
+    const receivables = parseNum(document.getElementById("receivables").value);
+    const totalDebt = parseNum(document.getElementById("totalDebt").value);
+    const annualDepreciation = parseNum(document.getElementById("annualDepreciation").value);
     const industryROABenchmark = Number(document.getElementById("industryROABenchmark").value);
 
     /* VALIDATION */

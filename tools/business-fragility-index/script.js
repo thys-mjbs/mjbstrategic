@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    /* SCORING — each dimension scored 0 to 25, total out of 100 */
+    /* SCORING: each dimension scored 0 to 25, total out of 100 */
     /* Higher score = higher fragility */
 
     /* DIMENSION 1: Customer concentration (0–25) */
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } else if (ccc >= 0) {
       wcScore = 5;
     } else {
-      wcScore = 0; /* Negative CCC = cash is collected before payment — low fragility */
+      wcScore = 0; /* Negative CCC = cash is collected before payment (low fragility) */
     }
 
     /* DIMENSION 4: Fixed cost exposure and margin buffer (0–25) */
@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       "<p><strong>Management Questions</strong></p>" +
       "<p>Which of the four fragility dimensions could realistically be improved within 12 months, and what is the specific action that would move that score, not a general improvement in relationships?</p>" +
-      "<p>Is the current operating margin sufficient to absorb the simultaneous materialisation of two fragility dimensions — for example, the loss of the top customer at the same time as a supplier price increase?</p>" +
+      "<p>Is the current operating margin sufficient to absorb the simultaneous materialisation of two fragility dimensions, for example, the loss of the top customer at the same time as a supplier price increase?</p>" +
       "<p>Has the board or senior management explicitly reviewed the fragility profile and made a deliberate decision about the acceptable level of structural risk, or has concentration accumulated without formal review?</p>" +
 
       "<p><strong>Selective Engagement Note</strong></p>" +

@@ -14,16 +14,39 @@ document.addEventListener("DOMContentLoaded", function () {
     return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  function parseNum(str) {
+    return Number(String(str).replace(/,/g, ""));
+  }
+
+  function attachNumFormat(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.type = "text";
+    el.inputMode = "numeric";
+    el.addEventListener("blur", function () {
+      var raw = this.value.replace(/[^0-9.-]/g, "");
+      if (raw === "" || raw === "-") return;
+      var parts = raw.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.value = parts.join(".");
+    });
+    el.addEventListener("focus", function () {
+      this.value = this.value.replace(/,/g, "");
+    });
+  }
+
+  ["currentMonthlyRevenue","currentFixedCosts","newFixedCosts"].forEach(attachNumFormat);
+
   function runDiagnostic() {
 
     resultContainer.innerHTML = "";
 
     /* INPUT COLLECTION */
 
-    const currentMonthlyRevenue = Number(document.getElementById("currentMonthlyRevenue").value);
+    const currentMonthlyRevenue = parseNum(document.getElementById("currentMonthlyRevenue").value);
     const grossMarginPercent = Number(document.getElementById("grossMarginPercent").value);
-    const currentFixedCosts = Number(document.getElementById("currentFixedCosts").value);
-    const newFixedCosts = Number(document.getElementById("newFixedCosts").value);
+    const currentFixedCosts = parseNum(document.getElementById("currentFixedCosts").value);
+    const newFixedCosts = parseNum(document.getElementById("newFixedCosts").value);
     const currentMonthlyGrowthPercent = Number(document.getElementById("currentMonthlyGrowthPercent").value);
     const targetMonths = Number(document.getElementById("targetMonths").value);
 

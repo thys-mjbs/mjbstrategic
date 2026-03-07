@@ -13,15 +13,38 @@ document.addEventListener("DOMContentLoaded", function () {
     return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  function parseNum(str) {
+    return Number(String(str).replace(/,/g, ""));
+  }
+
+  function attachNumFormat(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.type = "text";
+    el.inputMode = "numeric";
+    el.addEventListener("blur", function () {
+      var raw = this.value.replace(/[^0-9.-]/g, "");
+      if (raw === "" || raw === "-") return;
+      var parts = raw.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.value = parts.join(".");
+    });
+    el.addEventListener("focus", function () {
+      this.value = this.value.replace(/,/g, "");
+    });
+  }
+
+  ["monthlyRevenue","monthlyFixedCosts","monthlyDebtService","cashReserves"].forEach(attachNumFormat);
+
   function runDiagnostic() {
     resultContainer.innerHTML = "";
 
     /* INPUT COLLECTION */
-    const monthlyRevenue = Number(document.getElementById("monthlyRevenue").value);
-    const monthlyFixedCosts = Number(document.getElementById("monthlyFixedCosts").value);
+    const monthlyRevenue = parseNum(document.getElementById("monthlyRevenue").value);
+    const monthlyFixedCosts = parseNum(document.getElementById("monthlyFixedCosts").value);
     const variableCostPercent = Number(document.getElementById("variableCostPercent").value);
-    const monthlyDebtService = Number(document.getElementById("monthlyDebtService").value);
-    const cashReserves = Number(document.getElementById("cashReserves").value);
+    const monthlyDebtService = parseNum(document.getElementById("monthlyDebtService").value);
+    const cashReserves = parseNum(document.getElementById("cashReserves").value);
 
     const revenueDeclinePercentInput = document.getElementById("revenueDeclinePercent").value;
     const fixedCostReductionPercentInput = document.getElementById("fixedCostReductionPercent").value;

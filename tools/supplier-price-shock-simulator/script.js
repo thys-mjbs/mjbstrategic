@@ -14,18 +14,41 @@ document.addEventListener("DOMContentLoaded", function () {
     return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  function parseNum(str) {
+    return Number(String(str).replace(/,/g, ""));
+  }
+
+  function attachNumFormat(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.type = "text";
+    el.inputMode = "numeric";
+    el.addEventListener("blur", function () {
+      var raw = this.value.replace(/[^0-9.-]/g, "");
+      if (raw === "" || raw === "-") return;
+      var parts = raw.split(".");
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.value = parts.join(".");
+    });
+    el.addEventListener("focus", function () {
+      this.value = this.value.replace(/,/g, "");
+    });
+  }
+
+  ["annualCOGS","annualRevenue","operatingProfit","annualFixedCosts"].forEach(attachNumFormat);
+
   function runDiagnostic() {
 
     resultContainer.innerHTML = "";
 
     /* INPUT COLLECTION */
 
-    const annualCOGS = Number(document.getElementById("annualCOGS").value);
-    const annualRevenue = Number(document.getElementById("annualRevenue").value);
-    const operatingProfit = Number(document.getElementById("operatingProfit").value);
+    const annualCOGS = parseNum(document.getElementById("annualCOGS").value);
+    const annualRevenue = parseNum(document.getElementById("annualRevenue").value);
+    const operatingProfit = parseNum(document.getElementById("operatingProfit").value);
     const dominantSupplierPct = Number(document.getElementById("dominantSupplierPct").value);
     const priceIncreasePct = Number(document.getElementById("priceIncreasePct").value);
-    const annualFixedCosts = Number(document.getElementById("annualFixedCosts").value);
+    const annualFixedCosts = parseNum(document.getElementById("annualFixedCosts").value);
     const passThroughPct = Number(document.getElementById("passThroughPct").value) || 0;
     const alternativeSourcePct = Number(document.getElementById("alternativeSourcePct").value) || 0;
     const volumeChangePct = Number(document.getElementById("volumeChangePct").value) || 0;
