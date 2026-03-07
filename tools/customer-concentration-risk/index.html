@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Concentration Risk Calculator — MJB Strategic</title>
+  <meta name="description" content="Measure dependence on a small number of customers. Generate a concentration score reflecting structural vulnerability to the loss of a dominant customer." />
+  <link rel="icon" href="/assets/style/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="/assets/style/global.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="site-brand"><a href="/">MJB Strategic</a></div>
+      <input type="checkbox" id="nav-toggle" class="nav-toggle">
+      <label for="nav-toggle" class="nav-toggle-label"><span></span><span></span><span></span></label>
+      <nav class="site-nav">
+        <a href="/home/">Home</a>
+        <a href="/diagnostics/">Diagnostics</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main tool-page">
+
+    <div class="tool-intro">
+      <p class="tool-eyebrow">Diagnostic Tool</p>
+      <h1>Customer Concentration Risk Calculator</h1>
+      <p>
+        This diagnostic measures the degree to which a business depends on a small number of customers for its revenue. High customer concentration creates a structural vulnerability where the relationship management, renewal decisions, and commercial terms of one or two counterparties can determine the financial outcome of the entire business.
+      </p>
+      <p>
+        In practice, customer concentration builds gradually. Businesses often grow by deepening relationships with successful clients, and the revenue share of key accounts expands over time. The commercial logic makes sense at the individual relationship level, but the cumulative effect is a revenue base that is far more fragile than the headline growth rate suggests.
+      </p>
+      <p>
+        Understanding concentration risk matters because it directly affects negotiating leverage, pricing discipline, and the ability to absorb customer-level shocks. A business where two customers represent sixty percent of revenue is structurally dependent on those relationships in a way that constrains every major commercial and operational decision.
+      </p>
+    </div>
+
+    <section class="tool-section">
+      <div class="tool-input-grid">
+
+        <div class="tool-segment">
+          <p class="segment-description">Revenue base and top customer shares</p>
+          <div class="tool-segment-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start">
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="annualRevenue">Annual revenue</label>
+                <input id="annualRevenue" type="number" placeholder="e.g., 18000000" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Total annual revenue across all customers.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="operatingMarginPct">Operating margin %</label>
+                <input id="operatingMarginPct" type="number" placeholder="e.g., 12" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Operating profit as a percentage of revenue.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="customer1Pct">Top customer revenue %</label>
+                <input id="customer1Pct" type="number" placeholder="e.g., 34" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Largest customer's revenue as a percentage of total.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="customer2Pct">Second customer revenue %</label>
+                <input id="customer2Pct" type="number" placeholder="e.g., 22" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Second largest customer as a percentage of total revenue.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="customer3Pct">Third customer revenue %</label>
+                <input id="customer3Pct" type="number" placeholder="e.g., 15" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Third largest customer as a percentage of total revenue.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="totalCustomerCount">Total customer count</label>
+                <input id="totalCustomerCount" type="number" placeholder="e.g., 45" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Total number of active customers across all revenue.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="top1ContractMonths">Top customer contract length months (optional)</label>
+                <input id="top1ContractMonths" type="number" placeholder="e.g., 12" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Remaining contract term for the largest customer if applicable.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="top1MarginPct">Top customer margin % (optional)</label>
+                <input id="top1MarginPct" type="number" placeholder="e.g., 18" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Gross margin earned on the largest customer relationship.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="annualChurnRate">Annual customer churn rate % (optional)</label>
+                <input id="annualChurnRate" type="number" placeholder="e.g., 8" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Annual percentage of customers lost on average across the base.</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="tool-visibility">
+      <p>Many of the inputs requested by this diagnostic are metrics that disciplined operators typically monitor through internal management reporting. If a number requested here is not immediately available it often indicates that the current reporting structure does not isolate that metric clearly. Businesses operating with strong financial visibility normally track these figures regularly because they influence pricing decisions, supplier negotiations, operational planning, capital allocation, and risk management. Part of the work performed by MJB Strategic often involves helping companies design internal reporting structures that surface these metrics consistently so management can make better operational decisions.</p>
+    </div>
+
+    <div class="tool-buttons">
+      <button id="calculateButton">Run diagnostic</button>
+      <button id="shareWhatsAppButton">Share this tool on WhatsApp</button>
+    </div>
+
+    <div id="result"></div>
+
+    <div class="tool-buttons" style="text-align:center;margin-top:28px">
+      <button id="contactButton" onclick="window.location.href='/contact'">
+        Contact us to explore fit and start your engagement today
+      </button>
+    </div>
+
+    <script src="script.js"></script>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner footer-grid">
+      <div class="footer-left">
+        <a href="mailto:thys@mjbstrategic.com">thys@mjbstrategic.com</a>
+        <a href="https://www.linkedin.com/in/matthys-b-062619172/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <div class="footer-center">
+        <p>© 2026 MJB Strategic</p>
+        <nav class="footer-nav">
+          <a href="/privacy/">Privacy</a>
+          <a href="/terms/">Terms</a>
+          <a href="/disclaimer/">Disclaimer</a>
+        </nav>
+      </div>
+      <div class="footer-right">
+        <address>Corlett Drive, Illovo<br>Sandton, Gauteng<br>South Africa, 2196</address>
+      </div>
+    </div>
+  </footer>
+  <button class="back-to-top" type="button" aria-label="Back to top">↑</button>
+  <script>
+    (function () {
+      var btn = document.querySelector(".back-to-top");
+      if (!btn) return;
+      function toggle() { if (window.scrollY > 300) btn.classList.add("show"); else btn.classList.remove("show"); }
+      btn.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: "smooth" }); });
+      window.addEventListener("scroll", toggle, { passive: true });
+      toggle();
+    })();
+  </script>
+</body>
+</html>

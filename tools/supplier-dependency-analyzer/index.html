@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supplier Dependency Analyzer — MJB Strategic</title>
+  <meta name="description" content="Measure reliance on a small number of suppliers. Quantify supplier leverage and identify where concentrated supply chains create margin pressure." />
+  <link rel="icon" href="/assets/style/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="/assets/style/global.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="site-brand"><a href="/">MJB Strategic</a></div>
+      <input type="checkbox" id="nav-toggle" class="nav-toggle">
+      <label for="nav-toggle" class="nav-toggle-label"><span></span><span></span><span></span></label>
+      <nav class="site-nav">
+        <a href="/home/">Home</a>
+        <a href="/diagnostics/">Diagnostics</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main tool-page">
+
+    <div class="tool-intro">
+      <p class="tool-eyebrow">Diagnostic Tool</p>
+      <h1>Supplier Dependency Analyzer</h1>
+      <p>
+        This diagnostic measures the degree to which a business depends on a small number of suppliers for its purchasing requirements. High supplier concentration means that a dominant supplier holds significant negotiating leverage over pricing, payment terms, and supply continuity — all of which directly affect margin and operational stability.
+      </p>
+      <p>
+        In practice, supplier concentration develops because consolidating purchasing improves volume pricing and simplifies procurement. This logic is sound at moderate levels, but when one or two suppliers account for the majority of spend, the balance of power in the commercial relationship shifts fundamentally. The business becomes dependent on the supplier's pricing decisions, capacity allocation, and strategic priorities.
+      </p>
+      <p>
+        Understanding supplier dependency matters because it constrains margin management from the cost side. Where customers determine the top of the margin, concentrated suppliers can compress the bottom. Businesses with high supplier dependency often accept margin pressure passively because the cost of sourcing alternatives appears to exceed the immediate benefit of resisting that pressure.
+      </p>
+    </div>
+
+    <section class="tool-section">
+      <div class="tool-input-grid">
+        <div class="tool-segment">
+          <div class="tool-segment-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start">
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="annualPurchasingSpend">Annual purchasing spend</label>
+                <input id="annualPurchasingSpend" type="number" placeholder="e.g., 9000000" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Total annual spend on purchased goods, materials, and services.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="annualRevenue">Annual revenue</label>
+                <input id="annualRevenue" type="number" placeholder="e.g., 18000000" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Total annual revenue for margin and purchasing intensity context.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="grossMarginPct">Gross margin %</label>
+                <input id="grossMarginPct" type="number" placeholder="e.g., 36" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Current gross profit percentage to assess cost sensitivity.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="supplier1Pct">Top supplier spend %</label>
+                <input id="supplier1Pct" type="number" placeholder="e.g., 48" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Largest supplier's share of total annual purchasing spend.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="supplier2Pct">Second supplier spend %</label>
+                <input id="supplier2Pct" type="number" placeholder="e.g., 22" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Second supplier's share of total annual purchasing spend.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="supplier3Pct">Third supplier spend %</label>
+                <input id="supplier3Pct" type="number" placeholder="e.g., 14" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Third supplier's share of total annual purchasing spend.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="totalSupplierCount">Total active supplier count</label>
+                <input id="totalSupplierCount" type="number" placeholder="e.g., 18" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Total number of suppliers used across all purchasing categories.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="top1ContractMonths">Top supplier contract months (optional)</label>
+                <input id="top1ContractMonths" type="number" placeholder="e.g., 12" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Remaining term on top supplier agreement if under contract.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="switchingCostPct">Estimated switching cost % (optional)</label>
+                <input id="switchingCostPct" type="number" placeholder="e.g., 8" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Cost of replacing top supplier as a percentage of their annual spend.</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="tool-visibility">
+      <p>Many of the inputs requested by this diagnostic are metrics that disciplined operators typically monitor through internal management reporting. If a number requested here is not immediately available it often indicates that the current reporting structure does not isolate that metric clearly. Businesses operating with strong financial visibility normally track these figures regularly because they influence pricing decisions, supplier negotiations, operational planning, capital allocation, and risk management. Part of the work performed by MJB Strategic often involves helping companies design internal reporting structures that surface these metrics consistently so management can make better operational decisions.</p>
+    </div>
+
+    <div class="tool-buttons">
+      <button id="calculateButton">Run diagnostic</button>
+      <button id="shareWhatsAppButton">Share this tool on WhatsApp</button>
+    </div>
+
+    <div id="result"></div>
+
+    <div class="tool-buttons" style="text-align:center;margin-top:28px">
+      <button id="contactButton" onclick="window.location.href='/contact'">
+        Contact us to explore fit and start your engagement today
+      </button>
+    </div>
+
+    <script src="script.js"></script>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner footer-grid">
+      <div class="footer-left">
+        <a href="mailto:thys@mjbstrategic.com">thys@mjbstrategic.com</a>
+        <a href="https://www.linkedin.com/in/matthys-b-062619172/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <div class="footer-center">
+        <p>© 2026 MJB Strategic</p>
+        <nav class="footer-nav">
+          <a href="/privacy/">Privacy</a>
+          <a href="/terms/">Terms</a>
+          <a href="/disclaimer/">Disclaimer</a>
+        </nav>
+      </div>
+      <div class="footer-right">
+        <address>Corlett Drive, Illovo<br>Sandton, Gauteng<br>South Africa, 2196</address>
+      </div>
+    </div>
+  </footer>
+  <button class="back-to-top" type="button" aria-label="Back to top">↑</button>
+  <script>
+    (function () {
+      var btn = document.querySelector(".back-to-top");
+      if (!btn) return;
+      function toggle() { if (window.scrollY > 300) btn.classList.add("show"); else btn.classList.remove("show"); }
+      btn.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: "smooth" }); });
+      window.addEventListener("scroll", toggle, { passive: true });
+      toggle();
+    })();
+  </script>
+</body>
+</html>

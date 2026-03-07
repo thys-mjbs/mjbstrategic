@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Revenue Diversification Index — MJB Strategic</title>
+  <meta name="description" content="Measure how evenly revenue is distributed across business activities. Generate a diversification score showing strategic resilience or over-reliance on narrow income sources." />
+  <link rel="icon" href="/assets/style/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="/assets/style/global.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="site-brand"><a href="/">MJB Strategic</a></div>
+      <input type="checkbox" id="nav-toggle" class="nav-toggle">
+      <label for="nav-toggle" class="nav-toggle-label"><span></span><span></span><span></span></label>
+      <nav class="site-nav">
+        <a href="/home/">Home</a>
+        <a href="/diagnostics/">Diagnostics</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main tool-page">
+
+    <div class="tool-intro">
+      <p class="tool-eyebrow">Diagnostic Tool</p>
+      <h1>Revenue Diversification Index</h1>
+      <p>
+        This diagnostic measures how evenly revenue is distributed across the different activities, products, services, or markets that the business operates in. It generates a diversification score that reflects whether the business operates with a broad, resilient revenue base or whether it is heavily dependent on a narrow set of income sources.
+      </p>
+      <p>
+        In practice, revenue concentration by segment often mirrors customer concentration but operates through a different mechanism. A business may serve many customers but generate most of its income from one product category, one geography, or one service line. If that segment is disrupted — by substitution, by regulatory change, or by competitive pressure — the entire revenue base is exposed even if the customer list appears diversified.
+      </p>
+      <p>
+        Understanding diversification matters because it determines the resilience of the revenue engine to changes in specific segments. A highly diversified revenue base absorbs segment-level disruption without a structural crisis, while a concentrated base transmits the full impact of any single-segment disruption directly to the profit and loss account.
+      </p>
+    </div>
+
+    <section class="tool-section">
+      <div class="tool-input-grid">
+
+        <div class="tool-segment">
+          <p class="segment-description">Revenue segments (enter at least 3, up to 6)</p>
+          <div class="tool-segment-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start">
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="seg1Pct">Segment 1 revenue %</label>
+                <input id="seg1Pct" type="number" placeholder="e.g., 45" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">First segment share as a percentage of total revenue.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="seg1Margin">Segment 1 gross margin %</label>
+                <input id="seg1Margin" type="number" placeholder="e.g., 38" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Gross margin earned on this segment.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="seg2Pct">Segment 2 revenue %</label>
+                <input id="seg2Pct" type="number" placeholder="e.g., 28" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Second segment share as a percentage of total revenue.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="seg2Margin">Segment 2 gross margin %</label>
+                <input id="seg2Margin" type="number" placeholder="e.g., 42" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Gross margin earned on this segment.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="seg3Pct">Segment 3 revenue %</label>
+                <input id="seg3Pct" type="number" placeholder="e.g., 17" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Third segment share as a percentage of total revenue.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="seg3Margin">Segment 3 gross margin %</label>
+                <input id="seg3Margin" type="number" placeholder="e.g., 29" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Gross margin earned on this segment.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="seg4Pct">Segment 4 revenue % (optional)</label>
+                <input id="seg4Pct" type="number" placeholder="e.g., 7" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Fourth segment share if applicable.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="seg4Margin">Segment 4 gross margin % (optional)</label>
+                <input id="seg4Margin" type="number" placeholder="e.g., 35" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Gross margin earned on segment 4.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="seg5Pct">Segment 5 revenue % (optional)</label>
+                <input id="seg5Pct" type="number" placeholder="e.g., 3" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Fifth segment share if applicable.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="seg5Margin">Segment 5 gross margin % (optional)</label>
+                <input id="seg5Margin" type="number" placeholder="e.g., 22" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Gross margin earned on segment 5.</p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="tool-segment">
+          <div class="tool-segment-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start">
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="annualRevenue">Annual revenue</label>
+                <input id="annualRevenue" type="number" placeholder="e.g., 15000000" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Total revenue to calculate absolute values per segment.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="tool-visibility">
+      <p>Many of the inputs requested by this diagnostic are metrics that disciplined operators typically monitor through internal management reporting. If a number requested here is not immediately available it often indicates that the current reporting structure does not isolate that metric clearly. Businesses operating with strong financial visibility normally track these figures regularly because they influence pricing decisions, supplier negotiations, operational planning, capital allocation, and risk management. Part of the work performed by MJB Strategic often involves helping companies design internal reporting structures that surface these metrics consistently so management can make better operational decisions.</p>
+    </div>
+
+    <div class="tool-buttons">
+      <button id="calculateButton">Run diagnostic</button>
+      <button id="shareWhatsAppButton">Share this tool on WhatsApp</button>
+    </div>
+
+    <div id="result"></div>
+
+    <div class="tool-buttons" style="text-align:center;margin-top:28px">
+      <button id="contactButton" onclick="window.location.href='/contact'">
+        Contact us to explore fit and start your engagement today
+      </button>
+    </div>
+
+    <script src="script.js"></script>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner footer-grid">
+      <div class="footer-left">
+        <a href="mailto:thys@mjbstrategic.com">thys@mjbstrategic.com</a>
+        <a href="https://www.linkedin.com/in/matthys-b-062619172/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <div class="footer-center">
+        <p>© 2026 MJB Strategic</p>
+        <nav class="footer-nav">
+          <a href="/privacy/">Privacy</a>
+          <a href="/terms/">Terms</a>
+          <a href="/disclaimer/">Disclaimer</a>
+        </nav>
+      </div>
+      <div class="footer-right">
+        <address>Corlett Drive, Illovo<br>Sandton, Gauteng<br>South Africa, 2196</address>
+      </div>
+    </div>
+  </footer>
+  <button class="back-to-top" type="button" aria-label="Back to top">↑</button>
+  <script>
+    (function () {
+      var btn = document.querySelector(".back-to-top");
+      if (!btn) return;
+      function toggle() { if (window.scrollY > 300) btn.classList.add("show"); else btn.classList.remove("show"); }
+      btn.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: "smooth" }); });
+      window.addEventListener("scroll", toggle, { passive: true });
+      toggle();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supplier Price Shock Simulator — MJB Strategic</title>
+  <meta name="description" content="Estimate the impact of supplier price increases on business profitability. Model how cost increases from a dominant supplier flow through to operating margin." />
+  <link rel="icon" href="/assets/style/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="/assets/style/global.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="site-brand"><a href="/">MJB Strategic</a></div>
+      <input type="checkbox" id="nav-toggle" class="nav-toggle">
+      <label for="nav-toggle" class="nav-toggle-label"><span></span><span></span><span></span></label>
+      <nav class="site-nav">
+        <a href="/home/">Home</a>
+        <a href="/diagnostics/">Diagnostics</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main tool-page">
+
+    <div class="tool-intro">
+      <p class="tool-eyebrow">Diagnostic Tool</p>
+      <h1>Supplier Price Shock Simulator</h1>
+      <p>
+        This diagnostic estimates the financial impact of supplier price increases on business profitability. It models how a cost increase from a dominant or significant supplier flows through the cost structure into gross margin, operating margin, and the total profit position.
+      </p>
+      <p>
+        In operating businesses, supplier price increases occur through contract renegotiations, commodity price changes, currency movements, or shifts in supplier pricing strategy. The impact on the business depends on both the size of the price increase and the concentration of purchasing spend with the affected supplier. A small increase from a dominant supplier can have a larger impact than a large increase from a minor one.
+      </p>
+      <p>
+        Understanding supplier price shock impact matters because it quantifies the margin pressure before the decision about pass-through pricing needs to be made. Knowing the exact profit at stake under several price increase scenarios provides the analytical basis for negotiation, sourcing decisions, and customer pricing responses.
+      </p>
+    </div>
+
+    <section class="tool-section">
+      <div class="tool-input-grid">
+        <div class="tool-segment">
+          <div class="tool-segment-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start">
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="annualCOGS">Annual cost of goods sold</label>
+                <input id="annualCOGS" type="number" placeholder="e.g., 11200000" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Total direct costs for the year including purchased materials and goods.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="annualRevenue">Annual revenue</label>
+                <input id="annualRevenue" type="number" placeholder="e.g., 18000000" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Total annual revenue for gross profit and margin calculations.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="operatingProfit">Current annual operating profit</label>
+                <input id="operatingProfit" type="number" placeholder="e.g., 1600000" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Current operating profit before interest and tax.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="dominantSupplierPct">Dominant supplier % of COGS</label>
+                <input id="dominantSupplierPct" type="number" placeholder="e.g., 52" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Percentage of total COGS purchased from the dominant supplier.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="priceIncreasePct">Expected price increase %</label>
+                <input id="priceIncreasePct" type="number" placeholder="e.g., 8" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Percentage increase the supplier is proposing or likely to apply.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="annualFixedCosts">Annual fixed costs</label>
+                <input id="annualFixedCosts" type="number" placeholder="e.g., 5200000" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Fixed overhead costs to calculate operating profit after the increase.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="passThroughPct">Customer price pass-through % (optional)</label>
+                <input id="passThroughPct" type="number" placeholder="e.g., 50" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Percentage of the cost increase that can be passed to customers.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="alternativeSourcePct">Alternative sourcing % available (optional)</label>
+                <input id="alternativeSourcePct" type="number" placeholder="e.g., 30" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Percentage of dominant supplier volume that could be sourced elsewhere.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="volumeChangePct">Volume impact of price change % (optional)</label>
+                <input id="volumeChangePct" type="number" placeholder="e.g., -5" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Expected change in sales volume if cost increase is passed to customers.</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="tool-visibility">
+      <p>Many of the inputs requested by this diagnostic are metrics that disciplined operators typically monitor through internal management reporting. If a number requested here is not immediately available it often indicates that the current reporting structure does not isolate that metric clearly. Businesses operating with strong financial visibility normally track these figures regularly because they influence pricing decisions, supplier negotiations, operational planning, capital allocation, and risk management. Part of the work performed by MJB Strategic often involves helping companies design internal reporting structures that surface these metrics consistently so management can make better operational decisions.</p>
+    </div>
+
+    <div class="tool-buttons">
+      <button id="calculateButton">Run diagnostic</button>
+      <button id="shareWhatsAppButton">Share this tool on WhatsApp</button>
+    </div>
+
+    <div id="result"></div>
+
+    <div class="tool-buttons" style="text-align:center;margin-top:28px">
+      <button id="contactButton" onclick="window.location.href='/contact'">
+        Contact us to explore fit and start your engagement today
+      </button>
+    </div>
+
+    <script src="script.js"></script>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner footer-grid">
+      <div class="footer-left">
+        <a href="mailto:thys@mjbstrategic.com">thys@mjbstrategic.com</a>
+        <a href="https://www.linkedin.com/in/matthys-b-062619172/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <div class="footer-center">
+        <p>© 2026 MJB Strategic</p>
+        <nav class="footer-nav">
+          <a href="/privacy/">Privacy</a>
+          <a href="/terms/">Terms</a>
+          <a href="/disclaimer/">Disclaimer</a>
+        </nav>
+      </div>
+      <div class="footer-right">
+        <address>Corlett Drive, Illovo<br>Sandton, Gauteng<br>South Africa, 2196</address>
+      </div>
+    </div>
+  </footer>
+  <button class="back-to-top" type="button" aria-label="Back to top">↑</button>
+  <script>
+    (function () {
+      var btn = document.querySelector(".back-to-top");
+      if (!btn) return;
+      function toggle() { if (window.scrollY > 300) btn.classList.add("show"); else btn.classList.remove("show"); }
+      btn.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: "smooth" }); });
+      window.addEventListener("scroll", toggle, { passive: true });
+      toggle();
+    })();
+  </script>
+</body>
+</html>

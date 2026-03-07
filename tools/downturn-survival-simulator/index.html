@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Downturn Survival Simulator — MJB Strategic</title>
+  <meta name="description" content="Stress-test the business at 10%, 20%, and 30% revenue declines. Identify the point at which operations become cash-negative and how long available resources can sustain the business." />
+  <link rel="icon" href="/assets/style/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="/assets/style/global.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="site-brand"><a href="/">MJB Strategic</a></div>
+      <input type="checkbox" id="nav-toggle" class="nav-toggle">
+      <label for="nav-toggle" class="nav-toggle-label"><span></span><span></span><span></span></label>
+      <nav class="site-nav">
+        <a href="/home/">Home</a>
+        <a href="/diagnostics/">Diagnostics</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main tool-page">
+
+    <div class="tool-intro">
+      <p class="tool-eyebrow">Diagnostic Tool</p>
+      <h1>Downturn Survival Simulator</h1>
+      <p>
+        This diagnostic stress-tests the business at three revenue decline levels — 10%, 20%, and 30% — and calculates the resulting gross profit, operating profit position, monthly cash burn, and survival runway under each scenario. It identifies the revenue decline threshold at which operations become cash-negative and quantifies how long available resources can sustain the business before structural intervention is required.
+      </p>
+      <p>
+        Revenue downturns create financial pressure through two mechanisms simultaneously. First, gross profit falls in proportion to the revenue decline multiplied by the gross margin rate. Second, fixed costs remain largely unchanged in the short term, which means the operating leverage that amplifies profit in growth also amplifies losses in decline. A business with high fixed costs and thin margins can move from profit to loss with a surprisingly modest revenue reduction.
+      </p>
+      <p>
+        Understanding downturn survival matters because it makes the stress-test explicit and numerical rather than intuitive. Most operators have a general sense that a significant revenue decline would be damaging, but translating that sense into specific months of runway and specific action thresholds allows management to set clear contingency triggers rather than reacting to deterioration after it has already become severe.
+      </p>
+    </div>
+
+    <section class="tool-section">
+      <div class="tool-input-grid">
+        <div class="tool-segment">
+          <div class="tool-segment-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start">
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="annualRevenue">Annual revenue</label>
+                <input id="annualRevenue" type="number" placeholder="e.g., 15000000" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Current total annual revenue.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="grossMarginPct">Gross margin %</label>
+                <input id="grossMarginPct" type="number" placeholder="e.g., 40" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Current gross profit as a percentage of revenue.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="annualFixedCosts">Annual fixed costs</label>
+                <input id="annualFixedCosts" type="number" placeholder="e.g., 4800000" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Total annual overhead and fixed operating costs.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="availableCash">Available cash and facility</label>
+                <input id="availableCash" type="number" placeholder="e.g., 600000" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Cash on hand plus undrawn facility available to absorb losses.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="annualDebtService">Annual debt service (optional)</label>
+                <input id="annualDebtService" type="number" placeholder="e.g., 240000" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Annual loan repayments and interest obligations.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="fixedCostReductionPct">Fixed cost reduction achievable % (optional)</label>
+                <input id="fixedCostReductionPct" type="number" placeholder="e.g., 15" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Percentage of fixed costs that could realistically be cut in a downturn response.</p>
+            </div>
+
+            <div class="tool-field">
+              <div class="tool-field-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <label for="wcReleaseRevenuePct">Working capital release % (optional)</label>
+                <input id="wcReleaseRevenuePct" type="number" placeholder="e.g., 8" style="width:160px" />
+              </div>
+              <p class="tool-helper" style="margin:6px 0 0 0;max-width:32ch">Additional cash released from working capital reduction as % of revenue (e.g., from debtor acceleration).</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="tool-visibility">
+      <p>Many of the inputs requested by this diagnostic are metrics that disciplined operators typically monitor through internal management reporting. If a number requested here is not immediately available it often indicates that the current reporting structure does not isolate that metric clearly. Businesses operating with strong financial visibility normally track these figures regularly because they influence pricing decisions, supplier negotiations, operational planning, capital allocation, and risk management. Part of the work performed by MJB Strategic often involves helping companies design internal reporting structures that surface these metrics consistently so management can make better operational decisions.</p>
+    </div>
+
+    <div class="tool-buttons">
+      <button id="calculateButton">Run diagnostic</button>
+      <button id="shareWhatsAppButton">Share this tool on WhatsApp</button>
+    </div>
+
+    <div id="result"></div>
+
+    <div class="tool-buttons" style="text-align:center;margin-top:28px">
+      <button id="contactButton" onclick="window.location.href='/contact'">
+        Contact us to explore fit and start your engagement today
+      </button>
+    </div>
+
+    <script src="script.js"></script>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner footer-grid">
+      <div class="footer-left">
+        <a href="mailto:thys@mjbstrategic.com">thys@mjbstrategic.com</a>
+        <a href="https://www.linkedin.com/in/matthys-b-062619172/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <div class="footer-center">
+        <p>© 2026 MJB Strategic</p>
+        <nav class="footer-nav">
+          <a href="/privacy/">Privacy</a>
+          <a href="/terms/">Terms</a>
+          <a href="/disclaimer/">Disclaimer</a>
+        </nav>
+      </div>
+      <div class="footer-right">
+        <address>Corlett Drive, Illovo<br>Sandton, Gauteng<br>South Africa, 2196</address>
+      </div>
+    </div>
+  </footer>
+  <button class="back-to-top" type="button" aria-label="Back to top">↑</button>
+  <script>
+    (function () {
+      var btn = document.querySelector(".back-to-top");
+      if (!btn) return;
+      function toggle() { if (window.scrollY > 300) btn.classList.add("show"); else btn.classList.remove("show"); }
+      btn.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: "smooth" }); });
+      window.addEventListener("scroll", toggle, { passive: true });
+      toggle();
+    })();
+  </script>
+</body>
+</html>

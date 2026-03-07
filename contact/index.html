@@ -3,10 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>MJB Strategic</title>
-  <meta name="description" content="Fixed-scope diagnostic reviews that surface the structural sources of operational and financial pressure inside owner-managed businesses." />
-
+  <title>Contact — MJB Strategic</title>
+  <meta name="description" content="Start a diagnostic engagement. A short intake to define scope, pressure point, or opportunity. No preparation required." />
   <link rel="icon" href="/assets/style/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="/assets/style/global.css" />
 </head>
@@ -18,15 +16,12 @@
       <div class="site-brand">
         <a href="/">MJB Strategic</a>
       </div>
-  
       <input type="checkbox" id="nav-toggle" class="nav-toggle">
-  
       <label for="nav-toggle" class="nav-toggle-label">
         <span></span>
         <span></span>
         <span></span>
       </label>
-  
       <nav class="site-nav">
         <a href="/home/">Home</a>
         <a href="/diagnostics/">Diagnostics</a>
@@ -36,9 +31,10 @@
       </nav>
     </div>
   </header>
-  
+
   <main class="page-content">
-    <section class="content-section narrow">
+    <section class="content-section">
+
       <h1>Contact</h1>
 
       <p>
@@ -57,38 +53,30 @@
         Focused diagnostics begin at $2,500.
       </p>
 
-      <div class="hero-actions">
+      <div class="hero-actions" style="margin-top: 40px;">
         <a
-          class="cta-button"  
+          class="cta-button"
           href="https://docs.google.com/forms/d/e/1FAIpQLSfVXm69uyzjXsF5IEp5yG7O5tbWwvPxvfH7LS7-Pj7tKs8KOw/viewform"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Open Contact Form
+          Open contact form
         </a>
       </div>
 
-      <p class="helper-text">
-        This opens a Google Form in a new window. You can submit a short outline and I will respond with next steps.
+      <p style="margin-top: 20px; font-size: 14px; color: #64748b;">
+        This opens a Google Form in a new window. Submit a short outline and I will respond with next steps.
       </p>
+
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="site-footer-inner footer-grid">
-  
       <div class="footer-left">
-        <a href="mailto:thys@mjbstrategic.com" class="footer-email">
-          thys@mjbstrategic.com
-        </a>
-        <a href="https://www.linkedin.com/in/matthys-b-062619172/"
-           target="_blank"
-           rel="noopener"
-           class="footer-linkedin">
-          LinkedIn
-        </a>
+        <a href="mailto:thys@mjbstrategic.com">thys@mjbstrategic.com</a>
+        <a href="https://www.linkedin.com/in/matthys-b-062619172/" target="_blank" rel="noopener">LinkedIn</a>
       </div>
-  
       <div class="footer-center">
         <p>© 2026 MJB Strategic</p>
         <nav class="footer-nav">
@@ -97,7 +85,6 @@
           <a href="/disclaimer/">Disclaimer</a>
         </nav>
       </div>
-  
       <div class="footer-right">
         <address>
           Corlett Drive, Illovo<br>
@@ -105,7 +92,6 @@
           South Africa, 2196
         </address>
       </div>
-  
     </div>
   </footer>
 
@@ -115,16 +101,13 @@
     (function () {
       var btn = document.querySelector(".back-to-top");
       if (!btn) return;
-
       function toggle() {
         if (window.scrollY > 300) btn.classList.add("show");
         else btn.classList.remove("show");
       }
-
       btn.addEventListener("click", function () {
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
-
       window.addEventListener("scroll", toggle, { passive: true });
       toggle();
     })();
