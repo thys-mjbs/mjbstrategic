@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:snapcalc.site)",
+      "WebFetch(domain:yourqrtoolkit.com)"
+    ]
+  }
+}
